@@ -117,6 +117,17 @@
   .about p{color:#b4b8bf;max-width:640px;margin-top:10px}
   .about h2{grid-column:auto;font-size:36px}
 
+  .also{display:flex;flex-direction:column;gap:16px;width:100%}
+  .also b{display:block;font-weight:600;font-size:16px}
+  .also span{display:block;color:var(--muted);font-size:14px;line-height:1.5}
+  .soon{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:28px 30px}
+  .soonhead{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .soonhead p{color:var(--muted);font-size:14.5px}
+  .badge{display:inline-block;border:1px solid #f5c542;color:#f5c542;border-radius:4px;padding:3px 10px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+  .soon ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 36px}
+  .soon li{padding:12px 0;border-top:1px solid var(--line)}
+  .soon li b{display:block;font-weight:600;font-size:15.5px}
+  .soon li span{display:block;color:var(--muted);font-size:14px}
   .links a.on{color:#fff}.links a.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--p)}
   .tools{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:44px}
   .tool{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);transition:border-color .2s}
