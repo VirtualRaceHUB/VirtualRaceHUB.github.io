@@ -118,6 +118,7 @@
 
   /* Über mich */
   .about{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;padding:120px 0 100px}
+  .about-logo{filter:drop-shadow(0 14px 30px rgba(0,0,0,.6))}
   .bignum{width:120px;height:120px;border-radius:50%;background:var(--mint);color:#fff;display:grid;place-items:center;font:700 italic 64px Poppins,sans-serif}
   .about p{color:#b4b8bf;max-width:640px;margin-top:12px}
 
@@ -314,10 +315,20 @@
   </div>
 
   <div class="about reveal" id="about">
-    <div class="bignum">6</div>
+    <div class="about-logo"><svg viewBox="0 0 100 100" width="120" height="120" aria-hidden="true">
+  <defs>
+    <linearGradient id="abg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16333a"/><stop offset=".55" stop-color="#0b1114"/><stop offset="1" stop-color="#070909"/></linearGradient>
+    <linearGradient id="arim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fd6e3" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity=".08"/></linearGradient>
+  </defs>
+  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#abg)"/>
+  <rect x="2.75" y="2.75" width="94.5" height="94.5" rx="23.3" fill="none" stroke="url(#arim)" stroke-width="1.5"/>
+  <path d="M52 30 L70 50 L52 70" fill="none" stroke="#0a6b77" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M32 30 L50 50 L32 70" fill="none" stroke="#13b6c9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
     <div>
-      <h2 data-de="Hi, ich bin Fulllinger." data-en="Hi, I'm Fulllinger.">Hi, ich bin Fulllinger.</h2>
-      <p data-de="Ich fahre iRacing mit der Startnummer 6 – und baue nebenbei die Tools, die ich mir selbst im Cockpit wünsche. Alles entsteht in meiner Freizeit, aus Spaß am Sim Racing und am Tüfteln. Feedback und Ideen sind jederzeit willkommen." data-en="I race on iRacing with the number 6 – and on the side I build the tools I want in my own cockpit. Everything is made in my free time, out of love for sim racing and tinkering. Feedback and ideas are always welcome.">Ich fahre iRacing mit der Startnummer 6 – und baue nebenbei die Tools, die ich mir selbst im Cockpit wünsche. Alles entsteht in meiner Freizeit, aus Spaß am Sim Racing und am Tüfteln. Feedback und Ideen sind jederzeit willkommen.</p>
+      <h2 data-de="Hi, ich bin Patrick." data-en="Hi, I'm Patrick.">Hi, ich bin Patrick.</h2>
+      <p data-de="Ich bin begeisterter Sim Racer und fahre fast jeden Abend iRacing. Irgendwann wollte ich Overlays und ein Lenkrad-Display, die genau zu meiner Art zu fahren passen – also habe ich sie selbst gebaut. Daraus ist VirtualRaceHUB entstanden. Alles entsteht in meiner Freizeit, aus Spaß am Sim Racing und am Tüfteln. Feedback und Ideen sind jederzeit willkommen." data-en="I&#39;m a passionate sim racer and drive iRacing almost every evening. At some point I wanted overlays and a wheel display that fit exactly the way I drive – so I built them myself. That&#39;s how VirtualRaceHUB started. Everything is made in my free time, out of love for sim racing and tinkering. Feedback and ideas are always welcome.">Ich bin begeisterter Sim Racer und fahre fast jeden Abend iRacing. Irgendwann wollte ich Overlays und ein Lenkrad-Display, die genau zu meiner Art zu fahren passen – also habe ich sie selbst gebaut. Daraus ist VirtualRaceHUB entstanden. Alles entsteht in meiner Freizeit, aus Spaß am Sim Racing und am Tüfteln. Feedback und Ideen sind jederzeit willkommen.</p>
       <div style="margin-top:22px"><a href="https://github.com/VirtualRaceHUB" class="pill-outline" target="_blank" rel="noopener">GitHub</a></div>
     </div>
   </div>
@@ -325,7 +336,7 @@
 
 <footer>
   <div class="wrap">
-    <span>© <span id="year"></span> VirtualRaceHUB · by Fulllinger</span>
+    <span>© <span id="year"></span> VirtualRaceHUB · by Patrick</span>
     <span data-de="Kein offizielles iRacing- oder SimHub-Produkt." data-en="Not an official iRacing or SimHub product.">Kein offizielles iRacing- oder SimHub-Produkt.</span>
   </div>
 </footer>
