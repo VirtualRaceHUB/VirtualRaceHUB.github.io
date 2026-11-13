@@ -514,7 +514,7 @@ renderAuthTexts();
     else{n=document.createElement('img');n.src=el.src;n.alt=el.alt||'';}
     n.addEventListener('click',function(e){e.stopPropagation();});
     body.appendChild(n);
-    function fit(){var w=n.naturalWidth||n.videoWidth,h=n.naturalHeight||n.videoHeight;if(!w)return;var s=Math.min(innerWidth*0.92/w,innerHeight*0.84/h,2);n.style.width=Math.round(w*s)+'px';n.style.maxWidth='none';n.style.maxHeight='none';}
+    function fit(){var w=n.naturalWidth||n.videoWidth,h=n.naturalHeight||n.videoHeight;if(!w)return;var s=Math.min(innerWidth*0.92/w,innerHeight*0.84/h,w<420?1.5:1);n.style.width=Math.round(w*s)+'px';n.style.maxWidth='none';n.style.maxHeight='none';}
     if(n.tagName==='IMG'){if(n.complete)fit();else n.onload=fit;}else n.addEventListener('loadedmetadata',fit);
     var t=el.closest('.tile'),h=t&&t.querySelector('h3');
     cap.textContent=h?h.textContent:(el.alt||'').replace('-Overlay','');
