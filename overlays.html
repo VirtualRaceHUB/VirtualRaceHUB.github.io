@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,700&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500;1,700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -155,44 +155,6 @@
   footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:13px}
   footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
-  /* ---------- Login ---------- */
-  .pill-white{border:0;cursor:pointer;font-family:inherit}
-  .dl-card{cursor:pointer;font-family:inherit;color:inherit;transition:border-color .2s,background .2s}
-  .dl-card:hover{border-color:#13b6c9;background:rgba(19,182,201,.06)}
-  .dl-card .st{display:block;margin-top:2px;font-size:12.5px;font-weight:600;color:#13b6c9}
-  .dl-card .st.wait{color:#f5c542}
-  .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
-  .modal[hidden]{display:none}
-  .mcard{width:100%;max-width:400px;background:#0b0c0e;border:1px solid var(--line2);border-radius:22px;padding:30px;position:relative}
-  .mclose{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:none;color:#fff;font-size:18px;cursor:pointer}
-  .mhead{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-  .mhead b{font-style:italic;text-transform:uppercase;font-size:17px;letter-spacing:-.3px;font-weight:500}
-  .mhead b i{font-style:italic;font-weight:700;color:#13b6c9}
-  .mcard h3{font-size:22px;font-weight:600;letter-spacing:-.4px}
-  .mcard p.sub2{color:var(--muted);font-size:14px;margin:4px 0 18px}
-  .tabs{display:flex;background:#141518;border-radius:999px;padding:3px;margin-bottom:18px}
-  .tabs button{flex:1;border:0;background:none;color:var(--muted);font:600 14px Poppins,sans-serif;padding:8px;border-radius:999px;cursor:pointer}
-  .tabs button.on{background:#232529;color:#fff}
-  .fld{display:block;margin-bottom:12px}
-  .fld span{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
-  .fld input{width:100%;background:#141518;border:1px solid var(--line2);border-radius:12px;padding:11px 14px;color:#fff;font:15px Poppins,sans-serif;outline:none}
-  .fld input:focus{border-color:#13b6c9}
-  .go{width:100%;border:0;border-radius:999px;background:#13b6c9;color:#fff;font:600 15px Poppins,sans-serif;padding:12px;cursor:pointer;margin-top:6px}
-  .go:hover{background:#22c4d6}.go:disabled{opacity:.6;cursor:wait}
-  .go.ghost{background:none;border:1px solid var(--line2)}
-  .linkbtn{background:none;border:0;color:var(--muted);font:13px Poppins,sans-serif;cursor:pointer;margin-top:12px;text-decoration:underline}
-  .msg{margin-top:14px;font-size:13.5px;border-radius:12px;padding:10px 12px;display:none}
-  .msg.show{display:block}
-  .msg.ok{background:rgba(19,182,201,.12);color:#8fe6ef}
-  .msg.err{background:rgba(255,93,108,.12);color:#ff9aa4}
-  .msg.wait{background:rgba(245,197,66,.12);color:#f5d27a}
-  .acc{background:#141518;border-radius:14px;padding:14px;margin-bottom:14px;font-size:14px}
-  .acc small{display:block;color:var(--muted);font-size:12px}
-  .badge2{display:inline-block;margin-top:8px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
-  .badge2.ok{background:rgba(19,182,201,.18);color:#13b6c9}
-  .badge2.wait{background:rgba(245,197,66,.15);color:#f5c542}
-
-  .ovid{display:block;max-width:100%;height:auto;border-radius:10px;background:#000}
 
   /* Einblenden beim Scrollen */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
@@ -228,12 +190,10 @@
       <a href="overlays.html" class="on" data-de="Overlays" data-en="Overlays">Overlays</a>
       <a href="dash.html" data-de="Dash" data-en="Dash">Dash</a>
       <span class="navsoon"><span data-de="LED-Profile" data-en="LED profiles">LED-Profile</span><em data-de="In Arbeit" data-en="In progress">In Arbeit</em></span>
-      <a href="index.html#download" data-de="Downloads" data-en="Downloads">Downloads</a>
       <a href="index.html#about" data-de="Über mich" data-en="About">Über mich</a>
     </nav>
     <div class="right">
       <div class="lang"><button id="btn-de" class="active" onclick="setLang('de')">DE</button><button id="btn-en" onclick="setLang('en')">EN</button></div>
-      <button id="authBtn" class="btn" type="button" onclick="openAuth()">Anmelden</button>
     </div>
   </div>
 </header>
@@ -300,18 +260,6 @@
       </ul>
     </div>
   </section>
-
-  <section id="download">
-    <div class="shead reveal">
-      <div class="kick">Download</div>
-      <h2 data-de="Hol dir das HUD." data-en="Get the HUD.">Hol dir das HUD.</h2>
-      <p data-de="Registriere dich jetzt und fahr noch heute mit dem HUD in iRacing." data-en="Sign up now and race with the HUD in iRacing today.">Registriere dich jetzt und fahr noch heute mit dem HUD in iRacing.</p>
-    </div>
-    <div class="dl-grid reveal">
-      <div></div>
-      <button type="button" class="dl-card" onclick="download('hud')"><b>VirtualRaceHUB HUD</b><span class="sub">Windows · .exe · 9 Overlays</span><span class="st" data-st></span></button>
-    </div>
-  </section>
 <div style="height:110px"></div>
 </main>
 <footer>
@@ -321,51 +269,6 @@
   </div>
 </footer>
 
-<div id="auth" class="modal" hidden onclick="if(event.target===this)closeAuth()">
-  <div class="mcard" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <button class="mclose" type="button" onclick="closeAuth()" aria-label="Schließen">×</button>
-    <div class="mhead"><svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true">
-  <defs>
-    <linearGradient id="mbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16333a"/><stop offset=".55" stop-color="#0b1114"/><stop offset="1" stop-color="#070909"/></linearGradient>
-    <linearGradient id="mrim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fd6e3" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity=".08"/></linearGradient>
-  </defs>
-  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#mbg)"/>
-  <rect x="2.75" y="2.75" width="94.5" height="94.5" rx="23.3" fill="none" stroke="url(#mrim)" stroke-width="1.5"/>
-  <path d="M52 30 L70 50 L52 70" fill="none" stroke="#0a6b77" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M32 30 L50 50 L32 70" fill="none" stroke="#13b6c9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-<b>VirtualRace<i>HUB</i></b></div>
-
-    <div id="vLogin">
-      <h3 id="authTitle" data-t="title"></h3>
-      <p class="sub2" data-t="intro"></p>
-      <div class="tabs"><button type="button" id="tabIn" class="on" onclick="setMode('in')" data-t="tabIn"></button><button type="button" id="tabUp" onclick="setMode('up')" data-t="tabUp"></button></div>
-      <form id="fAuth" onsubmit="submitAuth(event)">
-        <label class="fld"><span data-t="email"></span><input id="iEmail" type="email" autocomplete="email" required></label>
-        <label class="fld"><span data-t="pw"></span><input id="iPw" type="password" autocomplete="current-password" minlength="8" required></label>
-        <button class="go" id="bGo" type="submit"></button>
-      </form>
-      <button class="linkbtn" type="button" onclick="resetPw()" data-t="forgot"></button>
-    </div>
-
-    <div id="vAcc" hidden>
-      <h3 data-t="accTitle"></h3>
-      <div class="acc"><small data-t="signedAs"></small><span id="accMail"></span><br><span id="accBadge" class="badge2"></span></div>
-      <p class="sub2" id="accText"></p>
-      <button class="go ghost" type="button" onclick="logout()" data-t="logout"></button>
-    </div>
-
-    <div id="vNewPw" hidden>
-      <h3 data-t="newPwTitle"></h3>
-      <form onsubmit="saveNewPw(event)">
-        <label class="fld"><span data-t="newPw"></span><input id="iNewPw" type="password" autocomplete="new-password" minlength="8" required></label>
-        <button class="go" type="submit" data-t="save"></button>
-      </form>
-    </div>
-
-    <div id="msg" class="msg" role="status"></div>
-  </div>
-</div>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -392,176 +295,6 @@
     }, {threshold: .12});
     els.forEach(function(e){ io.observe(e); });
   })();
-</script>
-
-<script>
-/* =========================================================
-   LOGIN & GESCHÜTZTE DOWNLOADS (Supabase)
-   Nur diese zwei Werte eintragen (Supabase -> Project Settings -> API):
-   ========================================================= */
-const SUPABASE_URL = 'https://waljltgwazekpjuxhbqq.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_INdby8QPAKIwS8qFWagfkQ_X-xKiv4K';   // öffentlicher Schlüssel – darf auf der Seite stehen
-
-/* Dateinamen im privaten Speicher-Bucket "downloads" */
-const FILES = {
-  hud:  'VirtualRaceHUB-HUD.zip',
-  dash: 'VirtualRaceHUB-Dash.simhubdash'
-};
-
-const T = {
-  de: {
-    signin:'Anmelden', account:'Konto',
-    title:'Willkommen', intro:'Melde dich an, um die Tools herunterzuladen.',
-    tabIn:'Anmelden', tabUp:'Registrieren', email:'E-Mail', pw:'Passwort (mind. 8 Zeichen)',
-    goIn:'Anmelden', goUp:'Konto erstellen', forgot:'Passwort vergessen?',
-    accTitle:'Dein Konto', signedAs:'Angemeldet als', logout:'Abmelden',
-    approved:'Freigeschaltet', pending:'Wartet auf Freischaltung',
-    accOk:'Du kannst alle Downloads nutzen.',
-    accWait:'Dein Konto ist angelegt. Sobald ich es freigeschaltet habe, kannst du hier herunterladen.',
-    stLogin:'Anmelden zum Download', stWait:'Freischaltung ausstehend', stOk:'Jetzt herunterladen ↓',
-    upDone:'Fast geschafft! Bitte bestätige deine E-Mail über den Link, den wir dir geschickt haben.',
-    resetNeedMail:'Trag oben deine E-Mail ein und klick dann noch einmal auf „Passwort vergessen?“.',
-    resetSent:'Wir haben dir einen Link zum Zurücksetzen geschickt.',
-    newPwTitle:'Neues Passwort festlegen', newPw:'Neues Passwort (mind. 8 Zeichen)', save:'Speichern',
-    pwSaved:'Passwort gespeichert – du bist angemeldet.',
-    notReady:'Diese Datei ist noch nicht verfügbar. Schau bald wieder vorbei!',
-    notConfigured:'Der Login wird gerade eingerichtet und ist bald verfügbar.',
-    badLogin:'E-Mail oder Passwort stimmt nicht.',
-    notConfirmed:'Bitte bestätige zuerst deine E-Mail über den Link in deinem Postfach.',
-    generic:'Das hat nicht geklappt. Bitte versuch es noch einmal.'
-  },
-  en: {
-    signin:'Sign in', account:'Account',
-    title:'Welcome', intro:'Sign in to download the tools.',
-    tabIn:'Sign in', tabUp:'Register', email:'Email', pw:'Password (min. 8 characters)',
-    goIn:'Sign in', goUp:'Create account', forgot:'Forgot password?',
-    accTitle:'Your account', signedAs:'Signed in as', logout:'Sign out',
-    approved:'Approved', pending:'Awaiting approval',
-    accOk:'You can use every download.',
-    accWait:'Your account has been created. As soon as I approve it, you can download here.',
-    stLogin:'Sign in to download', stWait:'Awaiting approval', stOk:'Download now ↓',
-    upDone:'Almost there! Please confirm your email via the link we sent you.',
-    resetNeedMail:'Enter your email above, then click "Forgot password?" again.',
-    resetSent:'We sent you a link to reset your password.',
-    newPwTitle:'Set a new password', newPw:'New password (min. 8 characters)', save:'Save',
-    pwSaved:'Password saved – you are signed in.',
-    notReady:'This file is not available yet. Check back soon!',
-    notConfigured:'Sign-in is being set up and will be available soon.',
-    badLogin:'Email or password is incorrect.',
-    notConfirmed:'Please confirm your email first via the link in your inbox.',
-    generic:'That didn\'t work. Please try again.'
-  }
-};
-const tr = k => (T[window.curLang || 'de'] || T.de)[k];
-
-const configured = !SUPABASE_URL.startsWith('DEINE') && !SUPABASE_KEY.startsWith('DEIN');
-const sb = (configured && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-
-let user = null, approved = false, mode = 'in', view = 'login';
-
-const $ = id => document.getElementById(id);
-function showMsg(text, kind){ const m=$('msg'); m.textContent=text||''; m.className='msg'+(text?' show '+(kind||'ok'):''); }
-function showView(v){ view=v; $('vLogin').hidden = v!=='login'; $('vAcc').hidden = v!=='acc'; $('vNewPw').hidden = v!=='newpw'; }
-
-function renderAuthTexts(){
-  document.querySelectorAll('#auth [data-t]').forEach(el => el.textContent = tr(el.dataset.t));
-  $('bGo').textContent = mode==='in' ? tr('goIn') : tr('goUp');
-  $('authBtn').textContent = user ? tr('account') : tr('signin');
-  if (user){
-    $('accMail').textContent = user.email;
-    const b=$('accBadge'); b.textContent = approved ? tr('approved') : tr('pending'); b.className='badge2 '+(approved?'ok':'wait');
-    $('accText').textContent = approved ? tr('accOk') : tr('accWait');
-  }
-  document.querySelectorAll('[data-st]').forEach(el => {
-    el.textContent = !user ? tr('stLogin') : (approved ? tr('stOk') : tr('stWait'));
-    el.className = 'st' + (user && !approved ? ' wait' : '');
-  });
-}
-
-function setMode(m){
-  mode=m; $('tabIn').classList.toggle('on',m==='in'); $('tabUp').classList.toggle('on',m==='up');
-  $('iPw').autocomplete = m==='in' ? 'current-password' : 'new-password';
-  showMsg(''); renderAuthTexts();
-}
-function openAuth(){
-  showMsg('');
-  if (view!=='newpw') showView(user ? 'acc' : 'login');
-  if (!configured) showMsg(tr('notConfigured'),'wait');
-  $('auth').hidden=false; renderAuthTexts();
-  if (!user && view==='login') setTimeout(()=>$('iEmail').focus(),50);
-}
-function closeAuth(){ $('auth').hidden=true; if (view==='newpw') showView(user?'acc':'login'); }
-document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('auth').hidden) closeAuth(); });
-
-async function loadProfile(){
-  approved = false;
-  if (!sb || !user) return;
-  const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
-  approved = !!(data && data.approved);
-}
-
-function errText(err){
-  const m = (err && err.message || '').toLowerCase();
-  if (m.includes('invalid login')) return tr('badLogin');
-  if (m.includes('not confirmed')) return tr('notConfirmed');
-  return tr('generic');
-}
-
-async function submitAuth(e){
-  e.preventDefault();
-  if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
-  const email=$('iEmail').value.trim(), password=$('iPw').value, btn=$('bGo');
-  btn.disabled=true; showMsg('');
-  try{
-    if (mode==='up'){
-      const { error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: location.origin + location.pathname } });
-      if (error) throw error;
-      showMsg(tr('upDone'),'ok');
-    } else {
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-    }
-  } catch(err){ showMsg(errText(err),'err'); }
-  btn.disabled=false;
-}
-
-async function resetPw(){
-  if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
-  const email=$('iEmail').value.trim();
-  if (!email){ showMsg(tr('resetNeedMail'),'wait'); $('iEmail').focus(); return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-  showMsg(error ? tr('generic') : tr('resetSent'), error ? 'err' : 'ok');
-}
-
-async function saveNewPw(e){
-  e.preventDefault();
-  const { error } = await sb.auth.updateUser({ password: $('iNewPw').value });
-  if (error){ showMsg(tr('generic'),'err'); return; }
-  showView('acc'); renderAuthTexts(); showMsg(tr('pwSaved'),'ok');
-}
-
-async function logout(){ if (sb) await sb.auth.signOut(); showView('login'); showMsg(''); }
-
-async function download(key){
-  if (!user || !approved){ openAuth(); return; }
-  const { data, error } = await sb.storage.from('downloads').createSignedUrl(FILES[key], 120, { download: true });
-  if (error || !data){ openAuth(); showView('acc'); renderAuthTexts(); showMsg(tr('notReady'),'wait'); return; }
-  window.location.href = data.signedUrl;
-}
-
-if (sb){
-  sb.auth.onAuthStateChange((event, session) => {
-    user = session ? session.user : null;
-    if (event === 'PASSWORD_RECOVERY'){ showView('newpw'); $('auth').hidden=false; renderAuthTexts(); showMsg(''); return; }
-    setTimeout(async () => {
-      await loadProfile();
-      if (user && view==='login') showView('acc');
-      if (!user && view==='acc') showView('login');
-      renderAuthTexts();
-    }, 0);
-  });
-}
-renderAuthTexts();
 </script>
 
 
