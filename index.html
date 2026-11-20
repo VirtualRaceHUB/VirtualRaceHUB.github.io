@@ -196,6 +196,23 @@
 
   .ovid{display:block;max-width:100%;height:auto;border-radius:10px;background:#000}
 
+  /* BETA-Schild über dem Namen */
+  .lgt{display:flex;flex-direction:column;align-items:flex-start;line-height:1}
+  .lgt .beta{font-style:normal;font-weight:700;font-size:8.5px;letter-spacing:1.4px;text-transform:uppercase;color:#13b6c9;border:1px solid rgba(19,182,201,.55);border-radius:999px;padding:2px 7px 1px;margin-bottom:4px}
+  /* Early-Access-Formular */
+  .ea{margin:0 0 28px;background:#0b0c0e;border:1px solid var(--line2);border-radius:18px;padding:22px}
+  .ea-row{display:flex;gap:10px;flex-wrap:wrap}
+  .ea-row input{flex:1 1 220px;min-width:0;background:#141518;border:1px solid var(--line2);border-radius:999px;padding:13px 18px;color:#fff;font:15px Poppins,sans-serif;outline:none}
+  .ea-row input#eaCode{flex:0 1 190px}
+  .ea-row input:focus{border-color:#13b6c9}
+  .ea-row input[readonly]{opacity:.7}
+  .ea-go{border:0;border-radius:999px;background:#13b6c9;color:#fff;font:600 15px Poppins,sans-serif;padding:13px 26px;cursor:pointer;white-space:nowrap}
+  .ea-go:hover{background:#22c4d6}.ea-go:disabled{opacity:.6;cursor:wait}
+  .ea-note{color:var(--muted);font-size:12.5px;line-height:1.55;margin:12px 4px 0}
+  .ea-ok{color:#8fe6ef;font-size:14.5px;margin:0 0 6px}
+  .ea .msg{margin-top:12px}
+  .ea .linkbtn{margin-top:4px}
+
   /* Einblenden beim Scrollen */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
@@ -224,7 +241,7 @@
   <rect x="2.75" y="2.75" width="94.5" height="94.5" rx="23.3" fill="none" stroke="url(#rima)" stroke-width="1.5"/>
   <path d="M52 30 L70 50 L52 70" fill="none" stroke="#0a6b77" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M32 30 L50 50 L32 70" fill="none" stroke="#13b6c9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-</svg><span><span>VirtualRace</span><b>HUB</b></span></a>
+</svg><span class="lgt"><i class="beta">Beta</i><span><span>VirtualRace</span><b>HUB</b></span></span></a>
     <nav class="links">
       <a href="index.html" class="on" data-de="Start" data-en="Home">Start</a>
       <a href="overlays.html" data-de="Overlays" data-en="Overlays">Overlays</a>
@@ -235,7 +252,6 @@
     </nav>
     <div class="right">
       <div class="lang"><button id="btn-de" class="active" onclick="setLang('de')">DE</button><button id="btn-en" onclick="setLang('en')">EN</button></div>
-      <button id="authBtn" class="btn" type="button" onclick="openAuth()">Anmelden</button>
     </div>
   </div>
 </header>
@@ -273,9 +289,21 @@
 
   <section id="download">
     <div class="shead reveal">
-      <div class="kick">Downloads</div>
+      <div class="kick">Early Access</div>
       <h2 data-de="Bereit für die nächste Runde?" data-en="Ready for the next lap?">Bereit für die nächste Runde?</h2>
-      <p data-de="Beide Tools sind kostenlos. Zum Herunterladen brauchst du ein Konto – nach der Freischaltung stehen dir alle Downloads offen." data-en="Both tools are free. You need an account to download – once it&#39;s approved, every download is open to you.">Beide Tools sind kostenlos. Zum Herunterladen brauchst du ein Konto – nach der Freischaltung stehen dir alle Downloads offen.</p>
+      <p data-de="Beide Tools sind kostenlos. Trag deine E-Mail und deinen Beta-Code ein, bestätige die Mail und lade sofort herunter." data-en="Both tools are free. Enter your email and beta code, confirm the email and download right away.">Beide Tools sind kostenlos. Trag deine E-Mail und deinen Beta-Code ein, bestätige die Mail und lade sofort herunter.</p>
+    </div>
+    <div class="ea reveal" id="eaBox">
+      <form id="eaForm" onsubmit="sendLink(event)">
+        <div class="ea-row">
+          <input id="eaMail" type="email" autocomplete="email" required>
+          <input id="eaCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+          <button class="ea-go" id="eaGo" type="submit"></button>
+        </div>
+        <p class="ea-note" data-t="eaNote"></p>
+      </form>
+      <div id="eaOk" style="display:none"><p class="ea-ok" data-t="eaOk"></p><button class="linkbtn" type="button" onclick="logout()" data-t="other"></button></div>
+      <div id="eaMsg" class="msg" role="status"></div>
     </div>
     <div class="dl-grid reveal">
       <div></div>
@@ -310,88 +338,9 @@
   </div>
 </footer>
 
-<div id="auth" class="modal" hidden onclick="if(event.target===this)closeAuth()">
-  <div class="mcard" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <button class="mclose" type="button" onclick="closeAuth()" aria-label="Schließen">×</button>
-    <div class="mhead"><svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true">
-  <defs>
-    <linearGradient id="mbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16333a"/><stop offset=".55" stop-color="#0b1114"/><stop offset="1" stop-color="#070909"/></linearGradient>
-    <linearGradient id="mrim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fd6e3" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity=".08"/></linearGradient>
-  </defs>
-  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#mbg)"/>
-  <rect x="2.75" y="2.75" width="94.5" height="94.5" rx="23.3" fill="none" stroke="url(#mrim)" stroke-width="1.5"/>
-  <path d="M52 30 L70 50 L52 70" fill="none" stroke="#0a6b77" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M32 30 L50 50 L32 70" fill="none" stroke="#13b6c9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-<b>VirtualRace<i>HUB</i></b></div>
-
-    <div id="vLogin">
-      <h3 id="authTitle" data-t="title"></h3>
-      <p class="sub2" data-t="intro"></p>
-      <div class="tabs"><button type="button" id="tabIn" class="on" onclick="setMode('in')" data-t="tabIn"></button><button type="button" id="tabUp" onclick="setMode('up')" data-t="tabUp"></button></div>
-      <form id="fAuth" onsubmit="submitAuth(event)">
-        <label class="fld"><span data-t="email"></span><input id="iEmail" type="email" autocomplete="email" required></label>
-        <label class="fld"><span data-t="pw"></span><input id="iPw" type="password" autocomplete="current-password" minlength="8" required></label>
-        <label class="fld" id="fCode" style="display:none"><span data-t="code"></span><input id="iCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
-        <button class="go" id="bGo" type="submit"></button>
-      </form>
-      <button class="linkbtn" type="button" onclick="resetPw()" data-t="forgot"></button>
-    </div>
-
-    <div id="vAcc" hidden>
-      <h3 data-t="accTitle"></h3>
-      <div class="acc"><small data-t="signedAs"></small><span id="accMail"></span><br><span id="accBadge" class="badge2"></span></div>
-      <p class="sub2" id="accText"></p>
-      <form id="fRedeem" onsubmit="redeemCode(event)" style="display:none">
-        <label class="fld"><span data-t="code"></span><input id="iRedeem" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required></label>
-        <button class="go" type="submit" data-t="redeem"></button>
-      </form>
-      <button class="go ghost" type="button" onclick="logout()" data-t="logout"></button>
-    </div>
-
-    <div id="vNewPw" hidden>
-      <h3 data-t="newPwTitle"></h3>
-      <form onsubmit="saveNewPw(event)">
-        <label class="fld"><span data-t="newPw"></span><input id="iNewPw" type="password" autocomplete="new-password" minlength="8" required></label>
-        <button class="go" type="submit" data-t="save"></button>
-      </form>
-    </div>
-
-    <div id="msg" class="msg" role="status"></div>
-  </div>
-</div>
-
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-  function setLang(lang){
-    document.querySelectorAll('[data-' + lang + ']').forEach(function(el){ el.innerHTML = el.getAttribute('data-' + lang); });
-    document.documentElement.lang = lang;
-    document.getElementById('btn-de').classList.toggle('active', lang === 'de');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-    try { localStorage.setItem('lang', lang); } catch(e) {}
-    window.curLang = lang;
-    if (window.renderAuthTexts) renderAuthTexts();
-  }
-  (function(){
-    var saved = null;
-    try { saved = localStorage.getItem('lang'); } catch(e) {}
-    setLang(saved || ((navigator.language || 'de').toLowerCase().indexOf('de') === 0 ? 'de' : 'en'));
-  })();
-  // Einblenden beim Scrollen
-  (function(){
-    var els = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('in'); }); return; }
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, {threshold: .12});
-    els.forEach(function(e){ io.observe(e); });
-  })();
-</script>
-
 <script>
 /* =========================================================
-   LOGIN & GESCHÜTZTE DOWNLOADS (Supabase)
-   Nur diese zwei Werte eintragen (Supabase -> Project Settings -> API):
+   EARLY ACCESS: E-Mail + Beta-Code, Bestätigung per Mail (Supabase)
    ========================================================= */
 const SUPABASE_URL = 'https://waljltgwazekpjuxhbqq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_INdby8QPAKIwS8qFWagfkQ_X-xKiv4K';   // öffentlicher Schlüssel – darf auf der Seite stehen
@@ -404,73 +353,61 @@ const FILES = {
 
 const T = {
   de: {
-    signin:'Anmelden', account:'Konto',
-    title:'Willkommen', intro:'Melde dich an, um die Tools herunterzuladen.',
-    tabIn:'Anmelden', tabUp:'Registrieren', email:'E-Mail', pw:'Passwort (mind. 8 Zeichen)',
-    goIn:'Anmelden', goUp:'Konto erstellen', forgot:'Passwort vergessen?',
-    accTitle:'Dein Konto', signedAs:'Angemeldet als', logout:'Abmelden',
-    approved:'Freigeschaltet', pending:'Beta-Code fehlt',
-    accOk:'Du kannst alle Downloads nutzen.',
-    accWait:'Dein Konto ist angelegt. Gib deinen Beta-Code ein, dann kannst du hier herunterladen.',
-    stLogin:'Anmelden zum Download', stWait:'Beta-Code eingeben', stOk:'Jetzt herunterladen ↓',
-    upWait:'Konto erstellt! Gib im Konto noch deinen Beta-Code ein.',
-    code:'Beta-Code', redeem:'Code einlösen', codeNeeded:'Bitte gib deinen Beta-Code ein.', codeBad:'Dieser Code stimmt nicht oder ist nicht mehr gültig.',
-    upDone:'Fast geschafft! Bitte bestätige deine E-Mail über den Link, den wir dir geschickt haben. Danach meldest du dich an und kannst herunterladen.',
-    resetNeedMail:'Trag oben deine E-Mail ein und klick dann noch einmal auf „Passwort vergessen?“.',
-    resetSent:'Wir haben dir einen Link zum Zurücksetzen geschickt.',
-    newPwTitle:'Neues Passwort festlegen', newPw:'Neues Passwort (mind. 8 Zeichen)', save:'Speichern',
-    pwSaved:'Passwort gespeichert – du bist angemeldet.',
+    phMail:'Deine E-Mail-Adresse', phCode:'Beta-Code',
+    goSend:'Download-Link senden', goRedeem:'Code einlösen',
+    eaNote:'Du bekommst zuerst eine Bestätigungsmail, damit sich niemand aus Versehen anmeldet. Nach dem Klick auf den Link kannst du sofort herunterladen. Den Beta-Code bekommst du von mir.',
+    eaOk:'Freigeschaltet – du kannst jetzt herunterladen.', other:'Mit anderer E-Mail',
+    stLogin:'E-Mail eintragen', stWait:'Beta-Code eingeben', stOk:'Jetzt herunterladen ↓',
+    mailSent:'Fast geschafft! Schau in dein Postfach und klick auf den Link in der Mail. Danach kannst du herunterladen.',
+    ready:'Du bist freigeschaltet. Jetzt kannst du herunterladen.',
+    codeNeeded:'Bitte gib deinen Beta-Code ein.',
+    codeBad:'Dieser Code stimmt nicht oder ist nicht mehr gültig.',
+    mailExpired:'Der Link ist abgelaufen oder wurde schon benutzt. Trag deine E-Mail bitte noch einmal ein.',
+    slow:'Bitte warte kurz, bevor du es noch einmal versuchst.',
     notReady:'Diese Datei ist noch nicht verfügbar. Schau bald wieder vorbei!',
-    notConfigured:'Der Login wird gerade eingerichtet und ist bald verfügbar.',
-    badLogin:'E-Mail oder Passwort stimmt nicht.',
-    notConfirmed:'Bitte bestätige zuerst deine E-Mail über den Link in deinem Postfach.',
+    notConfigured:'Der Download wird gerade eingerichtet und ist bald verfügbar.',
     generic:'Das hat nicht geklappt. Bitte versuch es noch einmal.'
   },
   en: {
-    signin:'Sign in', account:'Account',
-    title:'Welcome', intro:'Sign in to download the tools.',
-    tabIn:'Sign in', tabUp:'Register', email:'Email', pw:'Password (min. 8 characters)',
-    goIn:'Sign in', goUp:'Create account', forgot:'Forgot password?',
-    accTitle:'Your account', signedAs:'Signed in as', logout:'Sign out',
-    approved:'Approved', pending:'Beta code missing',
-    accOk:'You can use every download.',
-    accWait:'Your account has been created. Enter your beta code to download.',
-    stLogin:'Sign in to download', stWait:'Enter beta code', stOk:'Download now ↓',
-    upWait:'Account created! Now enter your beta code in your account.',
-    code:'Beta code', redeem:'Redeem code', codeNeeded:'Please enter your beta code.', codeBad:'This code is wrong or no longer valid.',
-    upDone:'Almost there! Please confirm your email via the link we sent you. Then sign in and you can download.',
-    resetNeedMail:'Enter your email above, then click "Forgot password?" again.',
-    resetSent:'We sent you a link to reset your password.',
-    newPwTitle:'Set a new password', newPw:'New password (min. 8 characters)', save:'Save',
-    pwSaved:'Password saved – you are signed in.',
+    phMail:'Your email address', phCode:'Beta code',
+    goSend:'Send me the download link', goRedeem:'Redeem code',
+    eaNote:'You get a confirmation email first, so nobody can sign you up by mistake. After you click the link you can download right away. I will send you the beta code.',
+    eaOk:'Unlocked – you can download now.', other:'Use another email',
+    stLogin:'Enter your email', stWait:'Enter beta code', stOk:'Download now ↓',
+    mailSent:'Almost there! Check your inbox and click the link in the email. Then you can download.',
+    ready:'You are unlocked. You can download now.',
+    codeNeeded:'Please enter your beta code.',
+    codeBad:'This code is wrong or no longer valid.',
+    mailExpired:'The link has expired or was already used. Please enter your email again.',
+    slow:'Please wait a moment before trying again.',
     notReady:'This file is not available yet. Check back soon!',
-    notConfigured:'Sign-in is being set up and will be available soon.',
-    badLogin:'Email or password is incorrect.',
-    notConfirmed:'Please confirm your email first via the link in your inbox.',
-    generic:'That didn\'t work. Please try again.'
+    notConfigured:'Downloads are being set up and will be available soon.',
+    generic:'That did not work. Please try again.'
   }
 };
 const tr = k => (T[window.curLang || 'de'] || T.de)[k];
 
 const configured = !SUPABASE_URL.startsWith('DEINE') && !SUPABASE_KEY.startsWith('DEIN');
+const cameFromMail = /access_token|error_code|error_description/.test(location.hash);
+const mailError = /error_code|error=/.test(location.hash);
 const sb = (configured && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-let user = null, approved = false, mode = 'in', view = 'login';
+let user = null, approved = false, announced = false;
 
 const $ = id => document.getElementById(id);
-function showMsg(text, kind){ const m=$('msg'); m.textContent=text||''; m.className='msg'+(text?' show '+(kind||'ok'):''); }
-function showView(v){ view=v; $('vLogin').hidden = v!=='login'; $('vAcc').hidden = v!=='acc'; $('vNewPw').hidden = v!=='newpw'; }
+function showMsg(text, kind){ const m=$('eaMsg'); if(!m) return; m.textContent=text||''; m.className='msg'+(text?' show '+(kind||'ok'):''); }
 
 function renderAuthTexts(){
-  document.querySelectorAll('#auth [data-t]').forEach(el => el.textContent = tr(el.dataset.t));
-  $('bGo').textContent = mode==='in' ? tr('goIn') : tr('goUp');
-  $('fCode').style.display = mode==='up' ? '' : 'none';
-  $('fRedeem').style.display = (user && !approved) ? '' : 'none';
-  $('authBtn').textContent = user ? tr('account') : tr('signin');
-  if (user){
-    $('accMail').textContent = user.email;
-    const b=$('accBadge'); b.textContent = approved ? tr('approved') : tr('pending'); b.className='badge2 '+(approved?'ok':'wait');
-    $('accText').textContent = approved ? tr('accOk') : tr('accWait');
+  document.querySelectorAll('#eaBox [data-t]').forEach(el => el.textContent = tr(el.dataset.t));
+  const mail=$('eaMail');
+  if (mail){
+    const unlocked = !!(user && approved);
+    mail.placeholder = tr('phMail'); $('eaCode').placeholder = tr('phCode');
+    $('eaGo').textContent = user ? tr('goRedeem') : tr('goSend');
+    $('eaForm').style.display = unlocked ? 'none' : '';
+    $('eaOk').style.display = unlocked ? '' : 'none';
+    if (user){ mail.value = user.email || mail.value; }
+    mail.readOnly = !!user;
   }
   document.querySelectorAll('[data-st]').forEach(el => {
     el.textContent = !user ? tr('stLogin') : (approved ? tr('stOk') : tr('stWait'));
@@ -478,108 +415,92 @@ function renderAuthTexts(){
   });
 }
 
-function setMode(m){
-  mode=m; $('tabIn').classList.toggle('on',m==='in'); $('tabUp').classList.toggle('on',m==='up');
-  $('iPw').autocomplete = m==='in' ? 'current-password' : 'new-password';
-  showMsg(''); renderAuthTexts();
+function errText(err){
+  const m = (err && err.message || '').toLowerCase();
+  if (m.includes('rate limit') || m.includes('security purposes') || m.includes('too many')) return tr('slow');
+  return tr('generic');
 }
-function openAuth(){
-  showMsg('');
-  if (view!=='newpw') showView(user ? 'acc' : 'login');
-  if (!configured) showMsg(tr('notConfigured'),'wait');
-  $('auth').hidden=false; renderAuthTexts();
-  if (!user && view==='login') setTimeout(()=>$('iEmail').focus(),50);
+
+async function redeem(code){
+  const r = await sb.rpc('redeem_beta_code', { p_code: code });
+  if (r.error) throw r.error;
+  approved = r.data === true;
+  return approved;
 }
-function closeAuth(){ $('auth').hidden=true; if (view==='newpw') showView(user?'acc':'login'); }
-document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('auth').hidden) closeAuth(); });
 
 async function loadProfile(){
   approved = false;
   if (!sb || !user) return;
-  let { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
+  const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
   approved = !!(data && data.approved);
-  const saved = user.user_metadata && user.user_metadata.beta_code;
-  if (!approved && saved){
-    const r = await sb.rpc('redeem_beta_code', { p_code: saved });
-    approved = !r.error && r.data === true;
+  if (!approved){
+    let c = null;
+    try { c = localStorage.getItem('vrh_code'); } catch(e) {}
+    c = c || (user.user_metadata && user.user_metadata.beta_code);
+    if (c){ try { await redeem(c); } catch(e) {} }
   }
 }
 
-async function redeemCode(e){
-  e.preventDefault();
-  if (!sb || !user) return;
-  showMsg('');
-  const r = await sb.rpc('redeem_beta_code', { p_code: $('iRedeem').value.trim() });
-  if (r.error){ showMsg(tr('generic'),'err'); return; }
-  if (r.data !== true){ showMsg(tr('codeBad'),'err'); return; }
-  await loadProfile(); renderAuthTexts(); showMsg(tr('accOk'),'ok');
-}
-
-function errText(err){
-  const m = (err && err.message || '').toLowerCase();
-  if (m.includes('invalid login')) return tr('badLogin');
-  if (m.includes('not confirmed')) return tr('notConfirmed');
-  return tr('generic');
-}
-
-async function submitAuth(e){
+async function sendLink(e){
   e.preventDefault();
   if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
-  const email=$('iEmail').value.trim(), password=$('iPw').value, btn=$('bGo');
-  const code = $('iCode').value.trim();
-  if (mode==='up' && !code){ showMsg(tr('codeNeeded'),'wait'); $('iCode').focus(); return; }
+  const email=$('eaMail').value.trim(), code=$('eaCode').value.trim(), btn=$('eaGo');
+  if (!code){ showMsg(tr('codeNeeded'),'wait'); $('eaCode').focus(); return; }
   btn.disabled=true; showMsg('');
   try{
-    if (mode==='up'){
-      const { data, error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: location.origin + location.pathname, data:{ beta_code: code } } });
-      if (error) throw error;
-      if (data && data.session) showMsg(tr('upWait'),'ok');   // ohne E-Mail-Bestätigung: direkt angemeldet
-      else showMsg(tr('upDone'),'ok');
+    if (user){                       // schon angemeldet: nur Code einlösen
+      if (await redeem(code)){ renderAuthTexts(); showMsg(tr('ready'),'ok'); }
+      else showMsg(tr('codeBad'),'err');
     } else {
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      const chk = await sb.rpc('check_beta_code', { p_code: code });
+      if (chk.error) throw chk.error;
+      if (chk.data !== true){ showMsg(tr('codeBad'),'err'); }
+      else {
+        try { localStorage.setItem('vrh_code', code); } catch(e) {}
+        const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true, data:{ beta_code: code } } });
+        if (error) throw error;
+        showMsg(tr('mailSent'),'ok');
+      }
     }
   } catch(err){ showMsg(errText(err),'err'); }
   btn.disabled=false;
 }
 
-async function resetPw(){
-  if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
-  const email=$('iEmail').value.trim();
-  if (!email){ showMsg(tr('resetNeedMail'),'wait'); $('iEmail').focus(); return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-  showMsg(error ? tr('generic') : tr('resetSent'), error ? 'err' : 'ok');
+async function logout(){
+  if (sb) await sb.auth.signOut();
+  user=null; approved=false;
+  if ($('eaMail')){ $('eaMail').value=''; $('eaCode').value=''; }
+  renderAuthTexts(); showMsg('');
 }
 
-async function saveNewPw(e){
-  e.preventDefault();
-  const { error } = await sb.auth.updateUser({ password: $('iNewPw').value });
-  if (error){ showMsg(tr('generic'),'err'); return; }
-  showView('acc'); renderAuthTexts(); showMsg(tr('pwSaved'),'ok');
+function toForm(){
+  const b=$('eaBox');
+  if (b){ b.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>{ const m=$('eaMail'); if(m) m.focus(); }, 450); }
+  else location.href='index.html#download';
 }
-
-async function logout(){ if (sb) await sb.auth.signOut(); showView('login'); showMsg(''); }
 
 async function download(key){
-  if (!user || !approved){ openAuth(); return; }
+  if (!user || !approved){ toForm(); return; }
   const { data, error } = await sb.storage.from('downloads').createSignedUrl(FILES[key], 120, { download: true });
-  if (error || !data){ openAuth(); showView('acc'); renderAuthTexts(); showMsg(tr('notReady'),'wait'); return; }
+  if (error || !data){ showMsg(tr('notReady'),'wait'); toForm(); return; }
   window.location.href = data.signedUrl;
 }
 
 if (sb){
   sb.auth.onAuthStateChange((event, session) => {
     user = session ? session.user : null;
-    if (event === 'PASSWORD_RECOVERY'){ showView('newpw'); $('auth').hidden=false; renderAuthTexts(); showMsg(''); return; }
     setTimeout(async () => {
       await loadProfile();
-      if (user && view==='login') showView('acc');
-      if (!user && view==='acc') showView('login');
       renderAuthTexts();
+      if (cameFromMail && user && approved && !announced){
+        announced = true; showMsg(tr('ready'),'ok');
+        const d=$('download'); if (d) d.scrollIntoView({behavior:'smooth'});
+      }
     }, 0);
   });
 }
 renderAuthTexts();
+if (cameFromMail && mailError){ showMsg(tr('mailExpired'),'err'); const d=$('download'); if (d) d.scrollIntoView(); }
 </script>
 
 
