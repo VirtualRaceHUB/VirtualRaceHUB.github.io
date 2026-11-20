@@ -300,6 +300,33 @@
 </footer>
 
 <script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  function setLang(lang){
+    document.querySelectorAll('[data-' + lang + ']').forEach(function(el){ el.innerHTML = el.getAttribute('data-' + lang); });
+    document.documentElement.lang = lang;
+    document.getElementById('btn-de').classList.toggle('active', lang === 'de');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    try { localStorage.setItem('lang', lang); } catch(e) {}
+    window.curLang = lang;
+    if (window.renderAuthTexts) renderAuthTexts();
+  }
+  (function(){
+    var saved = null;
+    try { saved = localStorage.getItem('lang'); } catch(e) {}
+    setLang(saved || ((navigator.language || 'de').toLowerCase().indexOf('de') === 0 ? 'de' : 'en'));
+  })();
+  // Einblenden beim Scrollen
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {threshold: .12});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+</script>
+
+<script>
 /* =========================================================
    EARLY ACCESS: E-Mail + Beta-Code, Bestätigung per Mail (Supabase)
    ========================================================= */
