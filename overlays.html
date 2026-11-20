@@ -343,6 +343,7 @@
       <form id="fAuth" onsubmit="submitAuth(event)">
         <label class="fld"><span data-t="email"></span><input id="iEmail" type="email" autocomplete="email" required></label>
         <label class="fld"><span data-t="pw"></span><input id="iPw" type="password" autocomplete="current-password" minlength="8" required></label>
+        <label class="fld" id="fCode" style="display:none"><span data-t="code"></span><input id="iCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
         <button class="go" id="bGo" type="submit"></button>
       </form>
       <button class="linkbtn" type="button" onclick="resetPw()" data-t="forgot"></button>
@@ -352,6 +353,10 @@
       <h3 data-t="accTitle"></h3>
       <div class="acc"><small data-t="signedAs"></small><span id="accMail"></span><br><span id="accBadge" class="badge2"></span></div>
       <p class="sub2" id="accText"></p>
+      <form id="fRedeem" onsubmit="redeemCode(event)" style="display:none">
+        <label class="fld"><span data-t="code"></span><input id="iRedeem" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required></label>
+        <button class="go" type="submit" data-t="redeem"></button>
+      </form>
       <button class="go ghost" type="button" onclick="logout()" data-t="logout"></button>
     </div>
 
@@ -415,12 +420,13 @@ const T = {
     tabIn:'Anmelden', tabUp:'Registrieren', email:'E-Mail', pw:'Passwort (mind. 8 Zeichen)',
     goIn:'Anmelden', goUp:'Konto erstellen', forgot:'Passwort vergessen?',
     accTitle:'Dein Konto', signedAs:'Angemeldet als', logout:'Abmelden',
-    approved:'Freigeschaltet', pending:'Wartet auf Freischaltung',
+    approved:'Freigeschaltet', pending:'Beta-Code fehlt',
     accOk:'Du kannst alle Downloads nutzen.',
-    accWait:'Dein Konto ist angelegt. Sobald ich es freigeschaltet habe, kannst du hier herunterladen.',
-    stLogin:'Anmelden zum Download', stWait:'Freischaltung ausstehend', stOk:'Jetzt herunterladen ↓',
-    upWait:'Konto erstellt! Sobald ich dich freigeschaltet habe, kannst du hier herunterladen.',
-    upDone:'Fast geschafft! Bitte bestätige deine E-Mail über den Link, den wir dir geschickt haben.',
+    accWait:'Dein Konto ist angelegt. Gib deinen Beta-Code ein, dann kannst du hier herunterladen.',
+    stLogin:'Anmelden zum Download', stWait:'Beta-Code eingeben', stOk:'Jetzt herunterladen ↓',
+    upWait:'Konto erstellt! Gib im Konto noch deinen Beta-Code ein.',
+    code:'Beta-Code', redeem:'Code einlösen', codeNeeded:'Bitte gib deinen Beta-Code ein.', codeBad:'Dieser Code stimmt nicht oder ist nicht mehr gültig.',
+    upDone:'Fast geschafft! Bitte bestätige deine E-Mail über den Link, den wir dir geschickt haben. Danach meldest du dich an und kannst herunterladen.',
     resetNeedMail:'Trag oben deine E-Mail ein und klick dann noch einmal auf „Passwort vergessen?“.',
     resetSent:'Wir haben dir einen Link zum Zurücksetzen geschickt.',
     newPwTitle:'Neues Passwort festlegen', newPw:'Neues Passwort (mind. 8 Zeichen)', save:'Speichern',
@@ -437,12 +443,13 @@ const T = {
     tabIn:'Sign in', tabUp:'Register', email:'Email', pw:'Password (min. 8 characters)',
     goIn:'Sign in', goUp:'Create account', forgot:'Forgot password?',
     accTitle:'Your account', signedAs:'Signed in as', logout:'Sign out',
-    approved:'Approved', pending:'Awaiting approval',
+    approved:'Approved', pending:'Beta code missing',
     accOk:'You can use every download.',
-    accWait:'Your account has been created. As soon as I approve it, you can download here.',
-    stLogin:'Sign in to download', stWait:'Awaiting approval', stOk:'Download now ↓',
-    upWait:'Account created! As soon as I approve you, you can download here.',
-    upDone:'Almost there! Please confirm your email via the link we sent you.',
+    accWait:'Your account has been created. Enter your beta code to download.',
+    stLogin:'Sign in to download', stWait:'Enter beta code', stOk:'Download now ↓',
+    upWait:'Account created! Now enter your beta code in your account.',
+    code:'Beta code', redeem:'Redeem code', codeNeeded:'Please enter your beta code.', codeBad:'This code is wrong or no longer valid.',
+    upDone:'Almost there! Please confirm your email via the link we sent you. Then sign in and you can download.',
     resetNeedMail:'Enter your email above, then click "Forgot password?" again.',
     resetSent:'We sent you a link to reset your password.',
     newPwTitle:'Set a new password', newPw:'New password (min. 8 characters)', save:'Save',
@@ -468,6 +475,8 @@ function showView(v){ view=v; $('vLogin').hidden = v!=='login'; $('vAcc').hidden
 function renderAuthTexts(){
   document.querySelectorAll('#auth [data-t]').forEach(el => el.textContent = tr(el.dataset.t));
   $('bGo').textContent = mode==='in' ? tr('goIn') : tr('goUp');
+  $('fCode').style.display = mode==='up' ? '' : 'none';
+  $('fRedeem').style.display = (user && !approved) ? '' : 'none';
   $('authBtn').textContent = user ? tr('account') : tr('signin');
   if (user){
     $('accMail').textContent = user.email;
@@ -498,8 +507,23 @@ document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('auth').h
 async function loadProfile(){
   approved = false;
   if (!sb || !user) return;
-  const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
+  let { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
   approved = !!(data && data.approved);
+  const saved = user.user_metadata && user.user_metadata.beta_code;
+  if (!approved && saved){
+    const r = await sb.rpc('redeem_beta_code', { p_code: saved });
+    approved = !r.error && r.data === true;
+  }
+}
+
+async function redeemCode(e){
+  e.preventDefault();
+  if (!sb || !user) return;
+  showMsg('');
+  const r = await sb.rpc('redeem_beta_code', { p_code: $('iRedeem').value.trim() });
+  if (r.error){ showMsg(tr('generic'),'err'); return; }
+  if (r.data !== true){ showMsg(tr('codeBad'),'err'); return; }
+  await loadProfile(); renderAuthTexts(); showMsg(tr('accOk'),'ok');
 }
 
 function errText(err){
@@ -513,10 +537,12 @@ async function submitAuth(e){
   e.preventDefault();
   if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
   const email=$('iEmail').value.trim(), password=$('iPw').value, btn=$('bGo');
+  const code = $('iCode').value.trim();
+  if (mode==='up' && !code){ showMsg(tr('codeNeeded'),'wait'); $('iCode').focus(); return; }
   btn.disabled=true; showMsg('');
   try{
     if (mode==='up'){
-      const { data, error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: location.origin + location.pathname } });
+      const { data, error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: location.origin + location.pathname, data:{ beta_code: code } } });
       if (error) throw error;
       if (data && data.session) showMsg(tr('upWait'),'ok');   // ohne E-Mail-Bestätigung: direkt angemeldet
       else showMsg(tr('upDone'),'ok');
