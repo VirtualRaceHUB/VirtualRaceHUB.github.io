@@ -307,6 +307,7 @@
   @media(max-width:900px){.g2{grid-template-columns:1fr}.gfeat{grid-template-columns:1fr 1fr}.ghead{flex-wrap:wrap}.gseg{margin:0}.gfoot{flex-wrap:wrap}}
   @media(max-width:560px){.gfeat{grid-template-columns:1fr}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -342,6 +343,7 @@
     <div class="kick reveal">Garage</div>
     <h1 class="reveal"><span data-de="Setups &amp; Liverys<br><em>für iRacing</em>" data-en="Setups &amp; liveries<br><em>for iRacing</em>">Setups &amp; Liverys<br><em>für iRacing</em></span></h1>
     <p class="lead reveal" data-de="Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und lädt deine Liverys automatisch bei Trading Paints hoch." data-en="VirtualRaceHUB Garage loads setups from several shops and uploads your liveries to Trading Paints automatically.">Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und lädt deine Liverys automatisch bei Trading Paints hoch.</p>
+    <p class="reveal" style="margin-top:22px"><a href="#download" class="btn fill big" data-de="Kostenlos laden" data-en="Get it free">Kostenlos laden</a></p>
 
     <div class="gwin reveal" id="gwin">
       <div class="gtitle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16" aria-hidden="true">
@@ -421,6 +423,28 @@
       <div class="gf reveal"><span class="tn">04</span><h3 data-de="Liverys hochladen" data-en="Upload liveries">Liverys hochladen</h3><p data-de="Pro Auto ein Ordner mit .tga und .mip: Die Garage erkennt das Auto und lädt Livery, Spec-Map, Anzug und Helm bei Trading Paints hoch – auf Wunsch alle auf einmal." data-en="One folder per car with .tga and .mip: the Garage recognises the car and uploads livery, spec map, suit and helmet to Trading Paints – all at once if you like.">Pro Auto ein Ordner mit .tga und .mip: Die Garage erkennt das Auto und lädt Livery, Spec-Map, Anzug und Helm bei Trading Paints hoch – auf Wunsch alle auf einmal.</p></div>
     </div>
   </section>
+  <section id="download">
+    <div class="shead reveal">
+      <div class="kick">Early Access</div>
+      <h2 data-de="Hol dir die Garage." data-en="Get the Garage.">Hol dir die Garage.</h2>
+      <p data-de="Gib deinen Beta-Code ein und lade Setups und Liverys noch heute." data-en="Enter your beta code and load setups and liveries today.">Gib deinen Beta-Code ein und lade Setups und Liverys noch heute.</p>
+    </div>
+    <div class="ea reveal" id="eaBox">
+      <form id="eaForm" onsubmit="sendCode(event)">
+        <div class="ea-row">
+          <input id="eaCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+          <button class="ea-go" id="eaGo" type="submit"></button>
+        </div>
+        <p class="ea-note" data-t="eaNote"></p>
+      </form>
+      <div id="eaOk" style="display:none"><p class="ea-ok" data-t="eaOk"></p></div>
+      <div id="eaMsg" class="msg" role="status"></div>
+    </div>
+    <div class="dl-grid reveal">
+      <div></div>
+      <button type="button" class="dl-card" onclick="download('garage')"><b>VirtualRaceHUB Garage</b><span class="sub">Windows · .zip · Setups und Liverys</span><span class="st" data-st></span></button>
+    </div>
+  </section>
 <div style="height:110px"></div>
 </main>
 
@@ -494,6 +518,146 @@
   lb.addEventListener('click',close);
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('open'))close();});
 })();
+</script>
+<script>
+/* =========================================================
+   EARLY ACCESS: nur Beta-Code, keine E-Mail (Supabase, anonyme Anmeldung)
+   ========================================================= */
+const SUPABASE_URL = 'https://waljltgwazekpjuxhbqq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_INdby8QPAKIwS8qFWagfkQ_X-xKiv4K';   // öffentlicher Schlüssel – darf auf der Seite stehen
+
+/* Dateinamen im privaten Speicher-Bucket "downloads" */
+const FILES = {
+  hud:  'VirtualRaceHUB Overlay.zip',
+  dash: 'VirtualRaceHUBDash.simhubdash',
+  garage: 'VirtualRaceHUB Garage.zip'
+};
+
+const T = {
+  de: {
+    phCode:'Dein Beta-Code', go:'Download freischalten',
+    eaNote:'Gib deinen Beta-Code ein und lade sofort herunter. Den Code bekommst du von mir. Eine E-Mail-Adresse brauchst du nicht.',
+    eaOk:'Freigeschaltet – du kannst jetzt herunterladen.',
+    stLogin:'Beta-Code eingeben', stWait:'Beta-Code eingeben', stOk:'Jetzt herunterladen ↓',
+    ready:'Du bist freigeschaltet. Jetzt kannst du herunterladen.',
+    codeNeeded:'Bitte gib deinen Beta-Code ein.',
+    codeBad:'Dieser Code stimmt nicht oder ist nicht mehr gültig.',
+    slow:'Bitte warte kurz, bevor du es noch einmal versuchst.',
+    unavailable:'Der Download ist gerade nicht verfügbar. Bitte versuch es später noch einmal.',
+    notReady:'Diese Datei ist noch nicht verfügbar. Schau bald wieder vorbei!',
+    notConfigured:'Der Download wird gerade eingerichtet und ist bald verfügbar.',
+    generic:'Das hat nicht geklappt. Bitte versuch es noch einmal.'
+  },
+  en: {
+    phCode:'Your beta code', go:'Unlock download',
+    eaNote:'Enter your beta code and download right away. I will send you the code. You do not need an email address.',
+    eaOk:'Unlocked – you can download now.',
+    stLogin:'Enter beta code', stWait:'Enter beta code', stOk:'Download now ↓',
+    ready:'You are unlocked. You can download now.',
+    codeNeeded:'Please enter your beta code.',
+    codeBad:'This code is wrong or no longer valid.',
+    slow:'Please wait a moment before trying again.',
+    unavailable:'The download is not available right now. Please try again later.',
+    notReady:'This file is not available yet. Check back soon!',
+    notConfigured:'Downloads are being set up and will be available soon.',
+    generic:'That did not work. Please try again.'
+  }
+};
+const tr = k => (T[window.curLang || 'de'] || T.de)[k];
+
+const configured = !SUPABASE_URL.startsWith('DEINE') && !SUPABASE_KEY.startsWith('DEIN');
+const sb = (configured && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+let user = null, approved = false, seq = 0;
+
+const $ = id => document.getElementById(id);
+function showMsg(text, kind){ const m=$('eaMsg'); if(!m) return; m.textContent=text||''; m.className='msg'+(text?' show '+(kind||'ok'):''); }
+
+function renderAuthTexts(){
+  document.querySelectorAll('#eaBox [data-t]').forEach(el => el.textContent = tr(el.dataset.t));
+  const code=$('eaCode');
+  if (code){
+    const unlocked = !!(user && approved);
+    code.placeholder = tr('phCode'); $('eaGo').textContent = tr('go');
+    $('eaForm').style.display = unlocked ? 'none' : '';
+    $('eaOk').style.display = unlocked ? '' : 'none';
+  }
+  document.querySelectorAll('[data-st]').forEach(el => {
+    el.textContent = (user && approved) ? tr('stOk') : tr('stLogin');
+    el.className = 'st';
+  });
+}
+
+function errText(err){
+  const m = (err && err.message || '').toLowerCase();
+  if (m.includes('rate limit') || m.includes('too many') || m.includes('security purposes')) return tr('slow');
+  if (m.includes('anonymous')) return tr('unavailable');
+  return tr('generic');
+}
+
+async function loadProfile(){
+  const my = ++seq;
+  if (!sb || !user){ approved = false; return; }
+  const chk = await sb.auth.getUser();
+  if (chk.error && [401,403,404].includes(chk.error.status)){      // Anmeldung ist ungültig geworden
+    await sb.auth.signOut({ scope:'local' });
+    if (my === seq){ user = null; approved = false; }
+    return;
+  }
+  const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
+  if (my === seq) approved = !!(data && data.approved);
+}
+
+async function redeem(code){
+  const r = await sb.rpc('redeem_beta_code', { p_code: code });
+  if (r.error) throw r.error;
+  if (r.data === true){ seq++; approved = true; return true; }
+  return false;
+}
+
+async function sendCode(e){
+  e.preventDefault();
+  if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
+  const code=$('eaCode').value.trim(), btn=$('eaGo');
+  if (!code){ showMsg(tr('codeNeeded'),'wait'); $('eaCode').focus(); return; }
+  btn.disabled=true; showMsg('');
+  try{
+    const chk = await sb.rpc('check_beta_code', { p_code: code });     // erst prüfen, dann anmelden
+    if (chk.error) throw chk.error;
+    if (chk.data !== true){ showMsg(tr('codeBad'),'err'); }
+    else {
+      if (!user){
+        const r = await sb.auth.signInAnonymously();
+        if (r.error) throw r.error;
+        user = r.data.user;
+      }
+      if (await redeem(code)){ renderAuthTexts(); showMsg(tr('ready'),'ok'); }
+      else showMsg(tr('codeBad'),'err');
+    }
+  } catch(err){ showMsg(errText(err),'err'); }
+  btn.disabled=false;
+}
+
+function toForm(){
+  const b=$('eaBox');
+  if (b){ b.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>{ const c=$('eaCode'); if(c) c.focus(); }, 450); }
+  else location.href='index.html#download';
+}
+
+async function download(key){
+  if (!user || !approved){ toForm(); return; }
+  const { data, error } = await sb.storage.from('downloads').createSignedUrl(FILES[key], 120, { download: true });
+  if (error || !data){ showMsg(tr('notReady'),'wait'); toForm(); return; }
+  window.location.href = data.signedUrl;
+}
+
+if (sb){
+  sb.auth.onAuthStateChange((event, session) => {
+    user = session ? session.user : null;
+    setTimeout(async () => { await loadProfile(); renderAuthTexts(); }, 0);
+  });
+}
+renderAuthTexts();
 </script>
 </body>
 </html>
