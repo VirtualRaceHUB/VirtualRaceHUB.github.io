@@ -201,7 +201,6 @@
   .ea{margin:0 0 28px;background:#0b0c0e;border:1px solid var(--line2);border-radius:18px;padding:22px}
   .ea-row{display:flex;gap:10px;flex-wrap:wrap}
   .ea-row input{flex:1 1 220px;min-width:0;background:#141518;border:1px solid var(--line2);border-radius:999px;padding:13px 18px;color:#fff;font:15px Poppins,sans-serif;outline:none}
-  .ea-row input#eaCode{flex:0 1 190px}
   .ea-row input:focus{border-color:#13b6c9}
   .ea-row input[readonly]{opacity:.7}
   .ea-go{border:0;border-radius:999px;background:#13b6c9;color:#fff;font:600 15px Poppins,sans-serif;padding:13px 26px;cursor:pointer;white-space:nowrap}
@@ -271,19 +270,18 @@
     <div class="shead reveal">
       <div class="kick">Early Access</div>
       <h2 data-de="Dein Dash wartet." data-en="Your dash is waiting.">Dein Dash wartet.</h2>
-      <p data-de="Trag deine E-Mail und deinen Beta-Code ein und fahr dein nächstes Rennen mit allen Infos im Blick." data-en="Enter your email and beta code and drive your next race with everything in view.">Trag deine E-Mail und deinen Beta-Code ein und fahr dein nächstes Rennen mit allen Infos im Blick.</p>
+      <p data-de="Gib deinen Beta-Code ein und fahr dein nächstes Rennen mit allen Infos im Blick." data-en="Enter your beta code and drive your next race with everything in view.">Gib deinen Beta-Code ein und fahr dein nächstes Rennen mit allen Infos im Blick.</p>
     </div>
     <div class="ea reveal" id="eaBox">
-      <form id="eaForm" onsubmit="sendLink(event)">
+      <form id="eaForm" onsubmit="sendCode(event)">
         <div class="ea-row">
-          <input id="eaMail" type="email" autocomplete="email" required>
           <input id="eaCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
           <button class="ea-go" id="eaGo" type="submit"></button>
         </div>
         <p class="ea-note" data-t="eaNote"></p>
+        <p class="ea-note"><a href="datenschutz.html" data-t="eaPriv" style="color:#13b6c9"></a></p>
       </form>
-      <button class="linkbtn" id="eaOut" type="button" onclick="logout()" data-t="other" style="display:none"></button>
-      <div id="eaOk" style="display:none"><p class="ea-ok" data-t="eaOk"></p><button class="linkbtn" type="button" onclick="logout()" data-t="other"></button></div>
+      <div id="eaOk" style="display:none"><p class="ea-ok" data-t="eaOk"></p></div>
       <div id="eaMsg" class="msg" role="status"></div>
     </div>
     <div class="dl-grid reveal">
@@ -296,6 +294,7 @@
 <footer>
   <div class="wrap">
     <span>© <span id="year"></span> VirtualRaceHUB · by Patrick</span>
+    <span><a href="datenschutz.html" style="color:inherit;text-decoration:underline" data-de="Datenschutz" data-en="Privacy">Datenschutz</a></span>
     <span data-de="Kein offizielles iRacing- oder SimHub-Produkt." data-en="Not an official iRacing or SimHub product.">Kein offizielles iRacing- oder SimHub-Produkt.</span>
   </div>
 </footer>
@@ -329,7 +328,7 @@
 
 <script>
 /* =========================================================
-   EARLY ACCESS: E-Mail + Beta-Code, Bestätigung per Mail (Supabase)
+   EARLY ACCESS: nur Beta-Code, keine E-Mail (Supabase, anonyme Anmeldung)
    ========================================================= */
 const SUPABASE_URL = 'https://waljltgwazekpjuxhbqq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_INdby8QPAKIwS8qFWagfkQ_X-xKiv4K';   // öffentlicher Schlüssel – darf auf der Seite stehen
@@ -342,33 +341,29 @@ const FILES = {
 
 const T = {
   de: {
-    phMail:'Deine E-Mail-Adresse', phCode:'Beta-Code',
-    goSend:'Download-Link senden', goRedeem:'Code einlösen',
-    eaNote:'Du bekommst zuerst eine Bestätigungsmail, damit sich niemand aus Versehen anmeldet. Nach dem Klick auf den Link kannst du sofort herunterladen. Den Beta-Code bekommst du von mir.',
-    eaOk:'Freigeschaltet – du kannst jetzt herunterladen.', other:'Mit anderer E-Mail',
-    stLogin:'E-Mail eintragen', stWait:'Beta-Code eingeben', stOk:'Jetzt herunterladen ↓',
-    mailSent:'Fast geschafft! Schau in dein Postfach und klick auf den Link in der Mail. Danach kannst du herunterladen.',
+    phCode:'Dein Beta-Code', go:'Download freischalten',
+    eaNote:'Gib deinen Beta-Code ein und lade sofort herunter. Den Code bekommst du von mir. Eine E-Mail-Adresse brauchst du nicht.',
+    eaOk:'Freigeschaltet – du kannst jetzt herunterladen.', eaPriv:'Datenschutzerklärung',
+    stLogin:'Beta-Code eingeben', stWait:'Beta-Code eingeben', stOk:'Jetzt herunterladen ↓',
     ready:'Du bist freigeschaltet. Jetzt kannst du herunterladen.',
     codeNeeded:'Bitte gib deinen Beta-Code ein.',
     codeBad:'Dieser Code stimmt nicht oder ist nicht mehr gültig.',
-    mailExpired:'Der Link ist abgelaufen oder wurde schon benutzt. Trag deine E-Mail bitte noch einmal ein.',
     slow:'Bitte warte kurz, bevor du es noch einmal versuchst.',
+    unavailable:'Der Download ist gerade nicht verfügbar. Bitte versuch es später noch einmal.',
     notReady:'Diese Datei ist noch nicht verfügbar. Schau bald wieder vorbei!',
     notConfigured:'Der Download wird gerade eingerichtet und ist bald verfügbar.',
     generic:'Das hat nicht geklappt. Bitte versuch es noch einmal.'
   },
   en: {
-    phMail:'Your email address', phCode:'Beta code',
-    goSend:'Send me the download link', goRedeem:'Redeem code',
-    eaNote:'You get a confirmation email first, so nobody can sign you up by mistake. After you click the link you can download right away. I will send you the beta code.',
-    eaOk:'Unlocked – you can download now.', other:'Use another email',
-    stLogin:'Enter your email', stWait:'Enter beta code', stOk:'Download now ↓',
-    mailSent:'Almost there! Check your inbox and click the link in the email. Then you can download.',
+    phCode:'Your beta code', go:'Unlock download',
+    eaNote:'Enter your beta code and download right away. I will send you the code. You do not need an email address.',
+    eaOk:'Unlocked – you can download now.', eaPriv:'Privacy policy',
+    stLogin:'Enter beta code', stWait:'Enter beta code', stOk:'Download now ↓',
     ready:'You are unlocked. You can download now.',
     codeNeeded:'Please enter your beta code.',
     codeBad:'This code is wrong or no longer valid.',
-    mailExpired:'The link has expired or was already used. Please enter your email again.',
     slow:'Please wait a moment before trying again.',
+    unavailable:'The download is not available right now. Please try again later.',
     notReady:'This file is not available yet. Check back soon!',
     notConfigured:'Downloads are being set up and will be available soon.',
     generic:'That did not work. Please try again.'
@@ -377,100 +372,81 @@ const T = {
 const tr = k => (T[window.curLang || 'de'] || T.de)[k];
 
 const configured = !SUPABASE_URL.startsWith('DEINE') && !SUPABASE_KEY.startsWith('DEIN');
-const cameFromMail = /access_token|error_code|error_description/.test(location.hash);
-const mailError = /error_code|error=/.test(location.hash);
 const sb = (configured && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-let user = null, approved = false, announced = false;
+let user = null, approved = false, seq = 0;
 
 const $ = id => document.getElementById(id);
 function showMsg(text, kind){ const m=$('eaMsg'); if(!m) return; m.textContent=text||''; m.className='msg'+(text?' show '+(kind||'ok'):''); }
 
 function renderAuthTexts(){
   document.querySelectorAll('#eaBox [data-t]').forEach(el => el.textContent = tr(el.dataset.t));
-  const mail=$('eaMail');
-  if (mail){
+  const code=$('eaCode');
+  if (code){
     const unlocked = !!(user && approved);
-    mail.placeholder = tr('phMail'); $('eaCode').placeholder = tr('phCode');
-    $('eaGo').textContent = user ? tr('goRedeem') : tr('goSend');
+    code.placeholder = tr('phCode'); $('eaGo').textContent = tr('go');
     $('eaForm').style.display = unlocked ? 'none' : '';
     $('eaOk').style.display = unlocked ? '' : 'none';
-    $('eaOut').style.display = (user && !unlocked) ? '' : 'none';
-    if (user){ mail.value = user.email || mail.value; }
-    mail.readOnly = !!user;
   }
   document.querySelectorAll('[data-st]').forEach(el => {
-    el.textContent = !user ? tr('stLogin') : (approved ? tr('stOk') : tr('stWait'));
-    el.className = 'st' + (user && !approved ? ' wait' : '');
+    el.textContent = (user && approved) ? tr('stOk') : tr('stLogin');
+    el.className = 'st';
   });
 }
 
 function errText(err){
   const m = (err && err.message || '').toLowerCase();
-  if (m.includes('rate limit') || m.includes('security purposes') || m.includes('too many')) return tr('slow');
+  if (m.includes('rate limit') || m.includes('too many') || m.includes('security purposes')) return tr('slow');
+  if (m.includes('anonymous')) return tr('unavailable');
   return tr('generic');
+}
+
+async function loadProfile(){
+  const my = ++seq;
+  if (!sb || !user){ approved = false; return; }
+  const chk = await sb.auth.getUser();
+  if (chk.error && [401,403,404].includes(chk.error.status)){      // Anmeldung ist ungültig geworden
+    await sb.auth.signOut({ scope:'local' });
+    if (my === seq){ user = null; approved = false; }
+    return;
+  }
+  const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
+  if (my === seq) approved = !!(data && data.approved);
 }
 
 async function redeem(code){
   const r = await sb.rpc('redeem_beta_code', { p_code: code });
   if (r.error) throw r.error;
-  approved = r.data === true;
-  return approved;
+  if (r.data === true){ seq++; approved = true; return true; }
+  return false;
 }
 
-async function loadProfile(){
-  approved = false;
-  if (!sb || !user) return;
-  const chk = await sb.auth.getUser();
-  if (chk.error && [401,403,404].includes(chk.error.status)){      // Konto gibt es nicht mehr
-    await sb.auth.signOut({ scope:'local' });
-    user = null; return;
-  }
-  const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
-  approved = !!(data && data.approved);
-  if (!approved){
-    let c = null;
-    try { c = localStorage.getItem('vrh_code'); } catch(e) {}
-    c = c || (user.user_metadata && user.user_metadata.beta_code);
-    if (c){ try { await redeem(c); } catch(e) {} }
-  }
-}
-
-async function sendLink(e){
+async function sendCode(e){
   e.preventDefault();
   if (!sb){ showMsg(tr('notConfigured'),'wait'); return; }
-  const email=$('eaMail').value.trim(), code=$('eaCode').value.trim(), btn=$('eaGo');
+  const code=$('eaCode').value.trim(), btn=$('eaGo');
   if (!code){ showMsg(tr('codeNeeded'),'wait'); $('eaCode').focus(); return; }
   btn.disabled=true; showMsg('');
   try{
-    if (user){                       // schon angemeldet: nur Code einlösen
+    const chk = await sb.rpc('check_beta_code', { p_code: code });     // erst prüfen, dann anmelden
+    if (chk.error) throw chk.error;
+    if (chk.data !== true){ showMsg(tr('codeBad'),'err'); }
+    else {
+      if (!user){
+        const r = await sb.auth.signInAnonymously();
+        if (r.error) throw r.error;
+        user = r.data.user;
+      }
       if (await redeem(code)){ renderAuthTexts(); showMsg(tr('ready'),'ok'); }
       else showMsg(tr('codeBad'),'err');
-    } else {
-      const chk = await sb.rpc('check_beta_code', { p_code: code });
-      if (chk.error) throw chk.error;
-      if (chk.data !== true){ showMsg(tr('codeBad'),'err'); }
-      else {
-        try { localStorage.setItem('vrh_code', code); } catch(e) {}
-        const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true, data:{ beta_code: code } } });
-        if (error) throw error;
-        showMsg(tr('mailSent'),'ok');
-      }
     }
   } catch(err){ showMsg(errText(err),'err'); }
   btn.disabled=false;
 }
 
-async function logout(){
-  if (sb) await sb.auth.signOut();
-  user=null; approved=false;
-  if ($('eaMail')){ $('eaMail').value=''; $('eaCode').value=''; }
-  renderAuthTexts(); showMsg('');
-}
-
 function toForm(){
   const b=$('eaBox');
-  if (b){ b.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>{ const m=$('eaMail'); if(m) m.focus(); }, 450); }
+  if (b){ b.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>{ const c=$('eaCode'); if(c) c.focus(); }, 450); }
   else location.href='index.html#download';
 }
 
@@ -484,18 +460,10 @@ async function download(key){
 if (sb){
   sb.auth.onAuthStateChange((event, session) => {
     user = session ? session.user : null;
-    setTimeout(async () => {
-      await loadProfile();
-      renderAuthTexts();
-      if (cameFromMail && user && approved && !announced){
-        announced = true; showMsg(tr('ready'),'ok');
-        const d=$('download'); if (d) d.scrollIntoView({behavior:'smooth'});
-      }
-    }, 0);
+    setTimeout(async () => { await loadProfile(); renderAuthTexts(); }, 0);
   });
 }
 renderAuthTexts();
-if (cameFromMail && mailError){ showMsg(tr('mailExpired'),'err'); const d=$('download'); if (d) d.scrollIntoView(); }
 </script>
 
 
