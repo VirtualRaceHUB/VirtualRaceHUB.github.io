@@ -286,6 +286,15 @@
   .gfoot{display:flex;align-items:center;gap:10px;padding:12px 24px;border-top:1px solid var(--line);font-size:12px;color:#8d929b}
   .gfoot code{background:#0e1114;border-radius:6px;padding:4px 10px;color:#c9ccd2}
   .gfoot u{margin-left:auto}
+  .glabel u{float:right;letter-spacing:0;text-transform:none;font-size:12.5px;color:#8d929b;font-weight:500}
+  .gtpnote{font-size:12px;color:#6f747c;margin:0 2px}
+  .gtp p{font-size:12.5px;color:#b4b8bf;margin-bottom:12px}
+  .gtp p b{color:#fff}
+  .gtpcars{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .gtpcars span{font-size:12px;padding:4px 9px;border-radius:7px;background:#0e1114;color:#c9ccd2}
+  .gtprow{display:flex;gap:12px;align-items:stretch;margin-bottom:10px}
+  .gtprow .gdl{display:flex;align-items:center;justify-content:center}
+  .gdlprog{margin-top:0;background:#0e5a65;color:#d6f3f6}
   .gnote{text-align:center;color:var(--muted);font-size:13px;margin-top:14px}
   .gfeat{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
   .gf{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:24px;transition:border-color .2s}
@@ -332,7 +341,7 @@
   <section class="ghero">
     <div class="kick reveal">Garage</div>
     <h1 class="reveal"><span data-de="Setups &amp; Liverys<br><em>für iRacing</em>" data-en="Setups &amp; liveries<br><em>for iRacing</em>">Setups &amp; Liverys<br><em>für iRacing</em></span></h1>
-    <p class="lead reveal" data-de="Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und bringt Team-Liverys mit einem Klick in dein iRacing." data-en="VirtualRaceHUB Garage loads setups from several shops and gets team liveries into your iRacing with one click.">Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und bringt Team-Liverys mit einem Klick in dein iRacing.</p>
+    <p class="lead reveal" data-de="Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und lädt deine Liverys automatisch bei Trading Paints hoch." data-en="VirtualRaceHUB Garage loads setups from several shops and uploads your liveries to Trading Paints automatically.">Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und lädt deine Liverys automatisch bei Trading Paints hoch.</p>
 
     <div class="gwin reveal" id="gwin">
       <div class="gtitle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16" aria-hidden="true">
@@ -385,13 +394,17 @@
       </div>
 
       <div class="gpane" id="gl">
-        <div class="gbox gliv"><div class="gicon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M6 17l1.5-6h9L18 17M7 17v2M17 17v2"/></svg></div><div><b>Team-Liverys</b><small>Datenbank ist noch leer · 1 Fahrer</small></div><span class="gdl">Liverys installieren</span></div>
-        <div class="g2">
-          <div class="gbox"><h5>In der Datenbank <u>Datenbank öffnen</u></h5><p>Noch keine Liverys in der Datenbank.</p><p class="s">Dateien in Liverys\&lt;Autoordner&gt;\ ablegen, z. B. car.tga oder car_YourID.tga und car_spec.mip. Helm/Anzug direkt in Liverys\. Die ID im Dateinamen wird beim Installieren ersetzt; unveränderte Dateien werden übersprungen, überarbeitete ersetzt.</p></div>
-          <div class="gbox"><h5>Fahrer <u>Bearbeiten</u></h5><div class="gdrv"><i>I</i>Ich<code>123456</code></div><div class="gwide">Team-Paket erstellen (ZIP für das Team)</div></div>
+        <div class="glabel">1 · Trading Paints – Anmeldung</div>
+        <div class="gbox glogin" style="margin-bottom:8px"><div class="gtag">TP</div><p><b>Trading Paints</b><span class="gdot"></span>Eingeloggt – Browserfenster nicht schließen</p><span class="gbtn">Fenster zeigen</span></div>
+        <p class="gtpnote">Das Browserfenster, in dem du angemeldet bist, bleibt offen – darüber läuft der Upload. Du kannst es minimieren.</p>
+        <div class="glabel" style="margin-top:20px">2 · Bei Trading Paints hochladen <u>Liverys-Ordner öffnen</u></div>
+        <div class="gbox gtp">
+          <p>Pro Auto ein Ordner, genau so benannt wie bei Trading Paints. Darin die <b>.tga</b> (Livery) und die <b>.mip</b> (Spec-Map) – alles andere wird ignoriert.</p>
+          <div class="gtpcars"><span>Acura NSX GT3 EVO 22</span><span>Aston Martin Vantage GT3 EVO</span><span>BMW M4 GT3 EVO</span><span>Ferrari 296 GT3</span><span>Ford Mustang GT3</span><span>McLaren 720S GT3 EVO</span><span>Porsche 911 GT3 R (992)</span><span>Porsche 963 GTP</span><span>Suits</span><span>Helmets</span></div>
+          <div class="gtprow"><div class="gsel" style="flex:1;margin:0">Porsche 963 GTP</div><span class="gdl" style="flex:1;margin:0">Dieses Auto hochladen</span></div>
+          <span class="gdl gdlprog">3 von 10 hochgeladen · Ferrari 296 GT3 · noch ca. 1:45</span>
         </div>
       </div>
-      <div class="gfoot" id="gfoot" style="display:none">Liverys nach <code>C:\Users\Max\Documents\iRacing\paint</code><u>Ordner öffnen</u></div>
     </div>
     <p class="gnote" data-de="Beispielansicht mit Platzhalter-Daten." data-en="Sample view with placeholder data.">Beispielansicht mit Platzhalter-Daten.</p>
   </section>
@@ -405,7 +418,7 @@
       <div class="gf reveal"><span class="tn">01</span><h3 data-de="Mehrere Shops" data-en="Several shops">Mehrere Shops</h3><p data-de="Grid and Go, GO Setups und P1doks in einem Fenster." data-en="Grid and Go, GO Setups and P1doks in one window.">Grid and Go, GO Setups und P1doks in einem Fenster.</p></div>
       <div class="gf reveal"><span class="tn">02</span><h3 data-de="Setups mit einem Klick" data-en="Setups in one click">Setups mit einem Klick</h3><p data-de="Serie wählen, laden, fertig. Die Setups landen direkt in der Garage 61." data-en="Pick a series, load, done. The setups land directly in Garage 61.">Serie wählen, laden, fertig. Die Setups landen direkt in der Garage 61.</p></div>
       <div class="gf reveal"><span class="tn">03</span><h3 data-de="Immer aktuell" data-en="Always up to date">Immer aktuell</h3><p data-de="Du siehst, wann und wie viele Setups zuletzt geladen wurden." data-en="You see when and how many setups were loaded last.">Du siehst, wann und wie viele Setups zuletzt geladen wurden.</p></div>
-      <div class="gf reveal"><span class="tn">04</span><h3 data-de="Team-Liverys" data-en="Team liveries">Team-Liverys</h3><p data-de="Liverys als Paket für das Team erstellen und direkt in iRacing installieren." data-en="Create livery packs for the team and install them straight into iRacing.">Liverys als Paket für das Team erstellen und direkt in iRacing installieren.</p></div>
+      <div class="gf reveal"><span class="tn">04</span><h3 data-de="Liverys hochladen" data-en="Upload liveries">Liverys hochladen</h3><p data-de="Pro Auto ein Ordner mit .tga und .mip: Die Garage erkennt das Auto und lädt Livery, Spec-Map, Anzug und Helm bei Trading Paints hoch – auf Wunsch alle auf einmal." data-en="One folder per car with .tga and .mip: the Garage recognises the car and uploads livery, spec map, suit and helmet to Trading Paints – all at once if you like.">Pro Auto ein Ordner mit .tga und .mip: Die Garage erkennt das Auto und lädt Livery, Spec-Map, Anzug und Helm bei Trading Paints hoch – auf Wunsch alle auf einmal.</p></div>
     </div>
   </section>
 <div style="height:110px"></div>
@@ -450,11 +463,10 @@
 
 <script>
 (function(){
-  var btns=document.querySelectorAll('.gseg button'),foot=document.getElementById('gfoot');
+  var btns=document.querySelectorAll('.gseg button');
   btns.forEach(function(b){b.addEventListener('click',function(){
     btns.forEach(function(x){x.classList.toggle('on',x===b)});
     document.querySelectorAll('.gpane').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.p)});
-    foot.style.display=b.dataset.p==='gl'?'flex':'none';
   });});
 })();
 </script>
