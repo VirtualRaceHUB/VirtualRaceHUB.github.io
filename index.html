@@ -302,6 +302,7 @@
         </div>
         <p class="ea-note" data-t="eaNote"></p>
       </form>
+      <button class="linkbtn" id="eaOut" type="button" onclick="logout()" data-t="other" style="display:none"></button>
       <div id="eaOk" style="display:none"><p class="ea-ok" data-t="eaOk"></p><button class="linkbtn" type="button" onclick="logout()" data-t="other"></button></div>
       <div id="eaMsg" class="msg" role="status"></div>
     </div>
@@ -433,6 +434,7 @@ function renderAuthTexts(){
     $('eaGo').textContent = user ? tr('goRedeem') : tr('goSend');
     $('eaForm').style.display = unlocked ? 'none' : '';
     $('eaOk').style.display = unlocked ? '' : 'none';
+    $('eaOut').style.display = (user && !unlocked) ? '' : 'none';
     if (user){ mail.value = user.email || mail.value; }
     mail.readOnly = !!user;
   }
@@ -458,6 +460,11 @@ async function redeem(code){
 async function loadProfile(){
   approved = false;
   if (!sb || !user) return;
+  const chk = await sb.auth.getUser();
+  if (chk.error && [401,403,404].includes(chk.error.status)){      // Konto gibt es nicht mehr
+    await sb.auth.signOut({ scope:'local' });
+    user = null; return;
+  }
   const { data } = await sb.from('profiles').select('approved').eq('id', user.id).maybeSingle();
   approved = !!(data && data.approved);
   if (!approved){
