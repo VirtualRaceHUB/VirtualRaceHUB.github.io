@@ -343,7 +343,7 @@
     <div class="kick reveal">Garage</div>
     <h1 class="reveal"><span data-de="Setups &amp; Liverys<br><em>für iRacing</em>" data-en="Setups &amp; liveries<br><em>for iRacing</em>">Setups &amp; Liverys<br><em>für iRacing</em></span></h1>
     <p class="lead reveal" data-de="Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und lädt deine Liverys automatisch bei Trading Paints hoch." data-en="VirtualRaceHUB Garage loads setups from several shops and uploads your liveries to Trading Paints automatically.">Die VirtualRaceHUB Garage lädt Setups von mehreren Shops und lädt deine Liverys automatisch bei Trading Paints hoch.</p>
-    <p class="reveal" style="margin-top:22px"><a href="#download" class="btn fill big" data-de="Kostenlos laden" data-en="Get it free">Kostenlos laden</a></p>
+    <p class="reveal" style="margin-top:22px"><span class="beta" style="display:inline-block;font-style:normal;font-weight:700;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#f5c542;border:1px solid rgba(245,197,66,.55);border-radius:999px;padding:8px 16px 7px" data-de="In Arbeit – noch kein Download" data-en="Work in progress – no download yet">In Arbeit – noch kein Download</span></p>
 
     <div class="gwin reveal" id="gwin">
       <div class="gtitle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16" aria-hidden="true">
@@ -425,24 +425,9 @@
   </section>
   <section id="download">
     <div class="shead reveal">
-      <div class="kick">Early Access</div>
-      <h2 data-de="Hol dir die Garage." data-en="Get the Garage.">Hol dir die Garage.</h2>
-      <p data-de="Gib deinen Beta-Code ein und lade Setups und Liverys noch heute." data-en="Enter your beta code and load setups and liveries today.">Gib deinen Beta-Code ein und lade Setups und Liverys noch heute.</p>
-    </div>
-    <div class="ea reveal" id="eaBox">
-      <form id="eaForm" onsubmit="sendCode(event)">
-        <div class="ea-row">
-          <input id="eaCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
-          <button class="ea-go" id="eaGo" type="submit"></button>
-        </div>
-        <p class="ea-note" data-t="eaNote"></p>
-      </form>
-      <div id="eaOk" style="display:none"><p class="ea-ok" data-t="eaOk"></p></div>
-      <div id="eaMsg" class="msg" role="status"></div>
-    </div>
-    <div class="dl-grid reveal">
-      <div></div>
-      <button type="button" class="dl-card" onclick="download('garage')"><b>VirtualRaceHUB Garage</b><span class="sub">Windows · .zip · Setups und Liverys</span><span class="st" data-st></span></button>
+      <div class="kick" data-de="In Arbeit" data-en="Work in progress">In Arbeit</div>
+      <h2 data-de="Die Garage kommt bald." data-en="The Garage is coming soon.">Die Garage kommt bald.</h2>
+      <p data-de="Noch kein Download – ich arbeite noch daran. Hier siehst du schon, was sie kann." data-en="No download yet – I am still working on it. Here you can already see what it does.">Noch kein Download – ich arbeite noch daran. Hier siehst du schon, was sie kann.</p>
     </div>
   </section>
 <div style="height:110px"></div>
@@ -529,8 +514,7 @@ const SUPABASE_KEY = 'sb_publishable_INdby8QPAKIwS8qFWagfkQ_X-xKiv4K';   // öff
 /* Dateinamen im privaten Speicher-Bucket "downloads" */
 const FILES = {
   hud:  'VirtualRaceHUB Overlay.zip',
-  dash: 'VirtualRaceHUBDash.simhubdash',
-  garage: 'VirtualRaceHUB Garage.zip'
+  dash: 'VirtualRaceHUBDash.simhubdash'
 };
 
 const T = {
