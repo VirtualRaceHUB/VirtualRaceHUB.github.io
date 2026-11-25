@@ -1,0 +1,441 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VirtualRaceHUB Stint-Plan</title><style>body{margin:0;background:#050607;color:#e6edf3;font-family:"Segoe UI",system-ui,sans-serif}#r{max-width:1280px;margin:0 auto;padding:22px 24px 40px}.st-root{--sb:#0b1117;--sbd:#1c2630;--sc:#121a22;--st:#e6edf3;--ss:#8b98a5;--sm:#5d6b78;--sa:#13b6c9;color:var(--st);font-size:14px;user-select:none}
+.st-root *{box-sizing:border-box}
+.st-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.st-bar b{font-size:18px}
+.st-root .sp{flex:1}
+.st-root button,.st-root select{font:inherit;color:var(--st);background:var(--sc);border:1px solid var(--sbd);border-radius:8px;padding:7px 12px;cursor:pointer}
+.st-root button:hover{border-color:var(--sa)}
+.st-root button:disabled{opacity:.4;cursor:default}
+.st-root button.ghost{background:transparent;color:var(--ss)}
+.st-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.st-card{background:var(--sc);border:1px solid var(--sbd);border-radius:12px;padding:14px 16px;min-width:0}
+.st-card.wide{margin-bottom:14px}
+.st-card h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ss);margin-bottom:10px;font-weight:600}
+.st-card h3 small{float:right;text-transform:none;letter-spacing:0;color:var(--sa);font-size:13px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 0;color:var(--ss)}
+.kv>span:first-child{flex:none}
+.kv>*:last-child,.kv b{color:var(--st)}
+.kv i,.note,.st-empty{color:var(--sm);font-style:normal;font-size:12.5px}
+.note{margin-top:8px}
+.acc{color:var(--sa)!important}
+.ed{display:inline-block;min-width:24px;padding:1px 3px;border-radius:4px;outline:none;color:var(--st);cursor:text;border-bottom:1px dotted transparent}
+.ed:hover{border-bottom-color:var(--sm)}
+.ed:focus{background:#0d141a;border-bottom-color:var(--sa)}
+.src{font-size:11px;color:var(--sm);margin-left:4px}.src.hot{color:var(--sa)}
+.seg{display:inline-flex;background:var(--sb);border:1px solid var(--sbd);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:transparent;padding:4px 10px;color:var(--ss)}
+.seg button.on{background:var(--sa);color:#001014}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.drv{padding:6px 0;border-bottom:1px solid var(--sbd);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.drv:last-of-type{border:0}
+.drv .sub{flex-basis:100%;font-size:12.5px;color:var(--sm);padding-left:22px}
+.drv .ir{color:var(--ss)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;flex:none;position:relative;vertical-align:middle}
+label.dot input{opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+.x{color:var(--sm);cursor:pointer;margin-left:6px}.x:hover{color:#ff5c6c}
+.add{display:inline-block;margin-top:8px;color:var(--sa);cursor:pointer}
+.tbl .th{display:flex;align-items:center;gap:14px;margin-bottom:8px}.tbl .th h3{margin:0}
+.inc{color:var(--ss)}.inc b{color:var(--st)}.inc.warn b{color:#f5b84a}.inc.bad b{color:#ff5c6c}
+.st-root table{width:100%;border-collapse:collapse;font-size:13.5px}
+.st-root th{text-align:left;font-weight:600;font-size:11.5px;color:var(--sm);padding:8px;background:#0d141a;text-transform:uppercase;letter-spacing:.04em}
+.st-root td{padding:9px 8px;border-top:1px solid var(--sbd);vertical-align:top;background:#0f161d}
+.st-root .r{text-align:right}.mono{font-family:"Cascadia Code",Consolas,monospace;font-size:13px}
+.stp{color:var(--sm);font-size:12px;margin-top:2px}
+.grip{width:26px;color:var(--sm);cursor:grab}.grip span{cursor:pointer}
+tr.lock td{background:#101a21}
+tr.drag{opacity:.4}tr.over td{border-top:2px solid var(--sa)}
+.dbl{font-size:11px;color:var(--ss);background:#1a242d;padding:2px 7px;border-radius:99px;margin-left:6px}
+.na{font-size:11px;color:#f5b84a;margin-left:6px}
+.chip{font-size:12px;padding:2px 9px;border-radius:99px;background:#1a242d}.chip.w{color:var(--sa)}.chip.t{color:#f5b84a}
+.sums{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 28px}
+.sum{display:flex;gap:14px;align-items:center;color:var(--ss)}.sum b{color:var(--st);min-width:110px}.sum i{color:var(--sm);font-style:normal}
+.st-foot{color:var(--sm);font-size:12.5px;margin:6px 2px 20px}.err{color:#ff5c6c}
+.st-empty{padding:40px;text-align:center}
+.sel{user-select:text}
+sup{font-size:10px;color:var(--sm);margin-left:2px}
+@media(max-width:1000px){.st-cards,.cols3{grid-template-columns:1fr}.sums{grid-template-columns:1fr}.st-root{overflow-x:auto}}
+</style></head>
+<body><div id="r" class="st-root"></div><script>/* VirtualRaceHUB Stint-Planer – Kern + Oberfläche (wird von Garage und Link-Ansicht genutzt) */
+(function () {
+const PAL = ["#1e9bff", "#9aa0a6", "#e066e0", "#2fbf6a", "#f5b84a", "#ff6b5c", "#8b3dff", "#13b6c9"];
+const $ = (s, r) => (r || document).querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const p2 = n => String(Math.floor(n)).padStart(2, "0");
+const hms = t => { t = Math.round(t); const s = ((t % 86400) + 86400) % 86400; return p2(s / 3600) + ":" + p2(s % 3600 / 60) + ":" + p2(s % 60); };
+const dayOff = t => Math.floor(Math.round(t) / 86400);
+const clock = t => hms(t) + (dayOff(t) > 0 ? `<sup>+${dayOff(t)}</sup>` : "");
+const dur = t => { t = Math.round(t); const h = Math.floor(t / 3600); return (h ? h + ":" : "") + p2(t % 3600 / 60).replace(/^0(?=\d:)/, "0") + ":" + p2(t % 60); };
+const ms = t => Math.floor(Math.round(t) / 60) + ":" + p2(Math.round(t) % 60);
+const lapFmt = t => { if (!t) return "–"; const m = Math.floor(t / 60); return m + ":" + (t - m * 60).toFixed(3).padStart(6, "0"); };
+const nf = (v, d = 2) => (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toString().replace(".", ",");
+
+/* ---- Eingaben lesen ---- */
+function parseNum(s) { const v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : 0; }
+function parseDur(s) { // "1:13", "53", "1:30:00" -> Sekunden
+  s = String(s).trim().replace(",", "."); if (!s) return 0;
+  const p = s.split(":").map(x => parseFloat(x) || 0); let t = 0; p.forEach(x => t = t * 60 + x); return p.length === 1 ? p[0] : t;
+}
+function parseHM(s) { const p = String(s).trim().split(":").map(x => parseFloat(x) || 0); return ((p[0] || 0) * 3600 + (p[1] || 0) * 60 + (p[2] || 0)); }
+function parseAvail(s) {
+  const out = []; String(s || "").replace(/(\d{1,2})(?::\d\d)?\s*(?:-|–|bis)\s*(\d{1,2})(?::\d\d)?/g, (m, a, b) => { out.push([+a, +b]); return m; }); return out;
+}
+function availAt(d, hour) { // hour 0..24 (Dezimal)
+  const av = parseAvail(d.avail); if (!av.length) return true; hour = ((hour % 24) + 24) % 24;
+  return av.some(([a, b]) => a === b ? true : a < b ? hour >= a && hour < b : hour >= a || hour < b);
+}
+function availSpan(d, from, to) { // Fahrer über ganzes Fenster (Sekunden seit 0 Uhr, to darf > 86400)
+  for (let t = from; t < to; t += 600) if (!availAt(d, t / 3600)) return false;
+  return availAt(d, (to - 1) / 3600);
+}
+
+/* ---- Modell ---- */
+function newPlan(who) {
+  const id = "p" + Math.random().toString(36).slice(2, 10);
+  return {
+    id, name: "", rev: Date.now(), updated_by: who || "", updated_at: Date.now(),
+    event: { team: "", name: "", date: "", car: "", cars: "", inc: 150, mode: "double" },
+    times: { warm: { start: "", dur: "" }, quali: { start: "", dur: "" }, race: { start: "13:40", dur: "24:00" } },
+    fuel: { tank: 100, cons: 3.2, pit: 20, t1: 6, t4: 24, fill: 35, swap: 53, tires: 4, together: true, lap: 0, cons_g61: 0 },
+    drivers: [], stints: [], online: false, view_token: "", edit_token: ""
+  };
+}
+
+function eff(plan) { // wirksame Werte (Garage 61 geht vor Handwerte)
+  const f = plan.fuel, cons = f.cons_g61 > 0 ? f.cons_g61 : f.cons;
+  const lapsTank = cons > 0 ? Math.floor(f.tank / cons + 1e-9) : 0;
+  return { cons, consSrc: f.cons_g61 > 0 ? "Garage 61" : "manuell", lapsTank };
+}
+function lapOf(plan, d) { return d.lap_g61 > 0 ? d.lap_g61 : d.lap > 0 ? d.lap : plan.fuel.lap > 0 ? plan.fuel.lap : 0; }
+function lapSrc(plan, d) { return d.lap_g61 > 0 ? "Garage 61" : d.lap > 0 ? "manuell" : plan.fuel.lap > 0 ? "Standard" : "fehlt"; }
+function work(plan) {
+  const f = plan.fuel, tires = f.tires == 4 ? f.t4 : f.tires == 1 ? f.t1 : 0;
+  return f.together ? Math.max(f.fill, tires) : f.fill + tires;
+}
+function pitTimes(plan) {
+  const f = plan.fuel, w = work(plan);
+  return { change: f.pit + Math.max(w, f.swap), fuelOnly: f.pit + w, work: w };
+}
+
+/* Zeiten aller Stints berechnen */
+function calc(plan) {
+  const e = eff(plan), pt = pitTimes(plan), raceDur = parseHM(plan.times.race.dur), start = parseHM(plan.times.race.start);
+  const rows = []; let t = 0;
+  for (let i = 0; i < plan.stints.length; i++) {
+    const s = plan.stints[i], d = plan.drivers[s.d]; const lap = d ? lapOf(plan, d) : 0;
+    let laps = e.lapsTank; const left = raceDur - t;
+    if (lap > 0 && left < laps * lap) laps = Math.max(1, Math.ceil(left / lap));
+    const st = laps * lap, last = i === plan.stints.length - 1 || t + st >= raceDur - 0.5, short = i === plan.stints.length - 1 && t + st < raceDur - 0.5;
+    const next = plan.stints[i + 1], same = next && next.d === s.d;
+    const after = last ? "" : same ? "Nur tanken" : "Wechsel";
+    const stop = last ? 0 : same ? pt.fuelOnly : pt.change;
+    rows.push({ i, d: s.d, laps, st, startAbs: start + t, endAbs: start + t + st, stop, after, resume: start + t + st + stop, tAbs: t, last, lap, short });
+    t += st + stop; if (last) break;
+  }
+  return rows;
+}
+
+/* Automatische Planung */
+function autoPlan(plan) {
+  const e = eff(plan), pt = pitTimes(plan), raceDur = parseHM(plan.times.race.dur), start = parseHM(plan.times.race.start);
+  const nd = plan.drivers.length; if (!nd || !e.lapsTank) return plan.stints;
+  const old = plan.stints, out = [], tot = new Array(nd).fill(0), mode = plan.event.mode;
+  let t = 0, i = 0, guard = 0;
+  const avg = () => tot.reduce((a, b) => a + b, 0) / nd;
+  while (t < raceDur - 0.5 && guard++ < 200) {
+    const lk = old[i] && old[i].lock ? old[i] : null; let pick = -1, fixedLen = 0;
+    const lenFor = di => { const lap = lapOf(plan, plan.drivers[di]) || 120; let laps = e.lapsTank; if (raceDur - t < laps * lap) laps = Math.max(1, Math.ceil((raceDur - t) / lap)); return laps * lap; };
+    const okFor = di => { const L = lenFor(di); return availSpan(plan.drivers[di], start + t, start + t + L + pt.change); };
+    const prev = out.length ? out[out.length - 1].d : -1, prevPair = out.length > 1 && out[out.length - 2].d === prev;
+    if (lk) pick = lk.d;
+    else {
+      const cands = plan.drivers.map((d, di) => di).filter(okFor);
+      const wantSame = prev >= 0 && !prevPair && (mode === "double" || (mode === "mixed" && tot[prev] <= avg() + 1)) && cands.includes(prev);
+      if (wantSame) pick = prev;
+      else {
+        let pool = cands.filter(di => di !== prev); if (!pool.length) pool = cands;
+        if (!pool.length) pool = plan.drivers.map((d, di) => di).filter(di => di !== prev);
+        if (!pool.length) pool = [0];
+        pick = pool.reduce((b, di) => tot[di] < tot[b] ? di : b, pool[0]);
+      }
+    }
+    const L = lenFor(pick); tot[pick] += L;
+    out.push({ d: pick, lock: !!(lk && lk.lock), inc: old[i] ? old[i].inc || 0 : 0 });
+    t += L + pt.change; i++;
+  }
+  return out;
+}
+
+/* ---- Oberfläche ---- */
+function create(root, io) {
+  const S = { plans: [], cur: null, undo: [], msg: "", dragI: -1, readonly: !!io.readonly, base: "", who: "", saveT: 0, lastEdit: 0, shareOpen: false };
+  const plan = () => S.plans.find(p => p.id === S.cur) || null;
+  const snap = () => { const p = plan(); if (!p || S.readonly) return; S.undo.push(JSON.stringify(p)); if (S.undo.length > 60) S.undo.shift(); };
+  function touch(p) {
+    p.rev = Date.now(); p.updated_at = p.rev; p.updated_by = S.who || p.updated_by || ""; S.lastEdit = Date.now();
+    clearTimeout(S.saveT); S.saveT = setTimeout(() => persist(p), 800);
+  }
+  async function persist(p) {
+    try { await io.save(p); } catch (e) {}
+    if (p.online && p.edit_token) {
+      try { const r = await io.push(p, false); if (r && !r.ok) S.msg = r.error || ""; else { S.msg = ""; if (r.res) p.srv = +r.res; } } catch (e) {}
+    }
+  }
+  function set(path, val, plain) {
+    const p = plan(); if (!p) return; snap();
+    const k = path.split("."); let o = p; for (let i = 0; i < k.length - 1; i++) o = o[k[i]]; o[k[k.length - 1]] = val;
+    if (/^(drivers\.\d+\.(lap|name|avail)|fuel\.|times\.race|event\.mode)/.test(path) && !plain) { /* Plan bleibt, Zeiten ändern sich */ }
+    if (/^(event\.mode)/.test(path)) p.stints = autoPlan(p);
+    ensure(p); touch(p); draw();
+  }
+  function ensure(p) {
+    if (!p.drivers.length) return;
+    if (!p.stints.length) { p.stints = autoPlan(p); return; }
+    let rows = calc(p);
+    if (rows.length && rows[rows.length - 1].short) {
+      const old = p.stints, full = autoPlan({ ...p, stints: old.map(s => ({ ...s, lock: true })) });
+      p.stints = full.map((s, i) => i < old.length ? old[i] : { ...s, lock: false });
+    }
+    rows = calc(p); if (rows.length < p.stints.length) p.stints.length = rows.length;
+  }
+
+  /* Eingabefelder (flach, direkt änderbar) */
+  const ed = (path, val, t, cls) => `<span class="ed ${cls || ""}" ${S.readonly ? "" : 'contenteditable="true" spellcheck="false"'} data-p="${path}" data-t="${t || "s"}">${esc(val)}</span>`;
+  const src = (txt, hot) => `<span class="src${hot ? " hot" : ""}">${txt}</span>`;
+
+  function totals(p, rows) {
+    const per = p.drivers.map(() => ({ t: 0, laps: 0, inc: 0, n: 0 })); let inc = 0;
+    rows.forEach(r => { const q = per[r.d]; if (q) { q.t += r.st; q.laps += r.laps; q.n++; q.inc += (p.stints[r.i].inc || 0); } inc += (p.stints[r.i].inc || 0); });
+    return { per, inc };
+  }
+
+  function draw() {
+    const p = plan(); if (!root) return;
+    if (document.activeElement && root.contains(document.activeElement) && document.activeElement.isContentEditable) return;
+    let h = bar(p);
+    if (!p) { root.innerHTML = h + `<div class="st-empty">${S.readonly ? "Plan wird geladen …" : "Noch kein Plan. Mit „Neuer Plan“ startest du einen Stint-Plan."}</div>`; wire(); return; }
+    const e = eff(p), pt = pitTimes(p), rows = calc(p), tt = totals(p, rows);
+    const avgIR = p.drivers.length ? Math.round(p.drivers.reduce((a, d) => a + (+d.ir || 0), 0) / p.drivers.length) : 0;
+    const incCls = tt.inc >= p.event.inc ? "bad" : tt.inc >= p.event.inc * .8 ? "warn" : "";
+    const m = p.event.mode;
+    h += `<div class="st-cards">
+      <div class="st-card"><h3>Event</h3>
+        <div class="kv"><span>Team</span>${ed("event.team", p.event.team || "–")}</div>
+        <div class="kv"><span>Event</span>${ed("event.name", p.event.name || "–")}</div>
+        <div class="kv"><span>Datum</span>${ed("event.date", p.event.date || "–")}</div>
+        <div class="kv"><span>Auto</span>${ed("event.car", p.event.car || "–")}</div>
+        <div class="kv"><span>Autos im Rennen</span>${ed("event.cars", p.event.cars || "–")}</div>
+        <div class="kv"><span>INC-Limit</span>${ed("event.inc", p.event.inc, "n")}</div>
+        <div class="kv"><span>Stints</span><span class="seg">${[["single", "Einzel"], ["double", "Doppel"], ["mixed", "Gemischt"]].map(([k, l]) => `<button data-mode="${k}" class="${m === k ? "on" : ""}" ${S.readonly ? "disabled" : ""}>${l}</button>`).join("")}</span></div>
+      </div>
+      <div class="st-card"><h3>Zeiten</h3>
+        ${[["warm", "Warm-up"], ["quali", "Qualifying"], ["race", "Rennen"]].map(([k, l]) => `<div class="kv"><span>${l}</span><span>${ed("times." + k + ".start", p.times[k].start || "–")} <i>Start</i> · ${ed("times." + k + ".dur", p.times[k].dur || "–")} <i>Dauer</i></span></div>`).join("")}
+        <div class="note">Alle Zeiten in einer Zeitzone (hh:mm).</div>
+      </div>
+      <div class="st-card"><h3>Fahrer <small>Team-iRating ${avgIR || "–"}</small></h3>
+        ${p.drivers.map((d, i) => `<div class="drv"><label class="dot" style="background:${d.color}"><input type="color" value="${d.color}" data-col="${i}" ${S.readonly ? "disabled" : ""}></label>
+          ${ed("drivers." + i + ".name", d.name || "Name")}<span class="sp"></span>${ed("drivers." + i + ".ir", d.ir || 0, "n", "ir")}
+          <div class="sub">Verfügbar ${ed("drivers." + i + ".avail", d.avail || "–")} · Runde ${ed("drivers." + i + ".lap", d.lap_g61 > 0 ? lapFmt(d.lap_g61) : d.lap > 0 ? lapFmt(d.lap) : "–", "l")} ${src(lapSrc(p, d), d.lap_g61 > 0)}${S.readonly ? "" : ` <a data-deld="${i}" class="x" title="Fahrer entfernen">×</a>`}</div></div>`).join("")}
+        ${S.readonly ? "" : `<a class="add" data-addd="1">+ Fahrer</a>`}
+      </div>
+    </div>
+    <div class="st-card wide"><h3>Kraftstoff &amp; Boxenstopp</h3>
+      <div class="cols3">
+        <div>
+          <div class="kv"><span>Tank (L)</span>${ed("fuel.tank", p.fuel.tank, "n")}</div>
+          <div class="kv"><span>Verbrauch (L/Runde)</span><span>${ed("fuel.cons", nf(p.fuel.cons), "n")} ${src(e.consSrc, e.consSrc === "Garage 61")}${e.consSrc === "Garage 61" ? ` <i>(${nf(e.cons)})</i>` : ""}</span></div>
+          <div class="kv"><span>Runden pro Tank</span><b>${nf(p.fuel.tank / (e.cons || 1), 2)}</b> <i>→ ${e.lapsTank} Runden</i></div>
+          <div class="kv"><span>Standard-Rundenzeit</span>${ed("fuel.lap", p.fuel.lap > 0 ? lapFmt(p.fuel.lap) : "–", "l")}</div>
+        </div>
+        <div>
+          <div class="kv"><span>Durchfahrt Boxengasse</span>${ed("fuel.pit", p.fuel.pit, "d")}</div>
+          <div class="kv"><span>1 Reifen</span>${ed("fuel.t1", p.fuel.t1, "d")}</div>
+          <div class="kv"><span>Alle 4 Reifen</span>${ed("fuel.t4", p.fuel.t4, "d")}</div>
+          <div class="kv"><span>Volltanken</span>${ed("fuel.fill", p.fuel.fill, "d")}</div>
+          <div class="kv"><span>Fahrerwechsel</span>${ed("fuel.swap", p.fuel.swap, "d")}</div>
+        </div>
+        <div>
+          <div class="kv"><span>Reifen im Stopp</span><span class="seg">${[[0, "keine"], [1, "1"], [4, "alle 4"]].map(([k, l]) => `<button data-tires="${k}" class="${p.fuel.tires == k ? "on" : ""}" ${S.readonly ? "disabled" : ""}>${l}</button>`).join("")}</span></div>
+          <div class="kv"><span>Tanken und Reifen</span><span class="seg"><button data-tog="1" class="${p.fuel.together ? "on" : ""}" ${S.readonly ? "disabled" : ""}>gleichzeitig</button><button data-tog="0" class="${p.fuel.together ? "" : "on"}" ${S.readonly ? "disabled" : ""}>nacheinander</button></span></div>
+          <div class="kv"><span>Boxenstopp mit Wechsel</span><b class="acc">${ms(pt.change)}</b></div>
+          <div class="kv"><span>Nur tanken</span><b>${ms(pt.fuelOnly)}</b></div>
+          <div class="note">Fahrerwechsel läuft parallel zum Tanken. Werte aus Garage 61 ersetzen die Handwerte automatisch.</div>
+        </div>
+      </div>
+    </div>`;
+    h += `<div class="st-card wide tbl"><div class="th"><h3>Stints</h3><span class="inc ${incCls}">Gesamt-INC <b>${tt.inc}</b> / ${p.event.inc}</span><span class="sp"></span>
+      <span class="note">${rows.length} Stints · ${e.lapsTank} Runden pro Tank</span></div>
+      <table><thead><tr><th></th><th>Nr</th><th>Fahrer</th><th>Zeit</th><th class="r">Runden</th><th class="r">Ziel-Rundenzeit</th><th class="r">Stintzeit</th><th>Danach</th><th class="r">INC</th></tr></thead><tbody>
+      ${rows.map(r => rowHtml(p, r)).join("") || `<tr><td colspan="9" class="empty">Noch keine Fahrer – füge Fahrer hinzu.</td></tr>`}
+      </tbody></table></div>`;
+    h += `<div class="st-card wide"><h3>Fahrzeit &amp; INC pro Fahrer</h3><div class="sums">${p.drivers.map((d, i) => `<div class="sum"><span class="dot" style="background:${d.color}"></span><b>${esc(d.name || "?")}</b><span>${dur(tt.per[i].t)} <i>Fahrzeit</i></span><span>${tt.per[i].laps} <i>Runden</i></span><span>${tt.per[i].n} <i>Stints</i></span><span>INC ${tt.per[i].inc}</span></div>`).join("")}</div></div>`;
+    h += `<div class="st-foot">${p.updated_by ? "Zuletzt geändert von " + esc(p.updated_by) + " · " : ""}${new Date(p.updated_at || Date.now()).toLocaleString("de-DE", { weekday: "short", hour: "2-digit", minute: "2-digit" })}${p.g61_stand ? " · Garage 61: Stand " + esc(p.g61_stand) : ""}${S.msg ? ` · <span class="err">${esc(S.msg)}</span>` : ""}</div>`;
+    root.innerHTML = h; wire();
+  }
+
+  function rowHtml(p, r) {
+    const d = p.drivers[r.d], s = p.stints[r.i], prev = p.stints[r.i - 1], next = p.stints[r.i + 1];
+    const dbl = (prev && prev.d === s.d) ? "2/2" : (next && next.d === s.d) ? "1/2" : "";
+    const av = d ? availSpan(d, r.startAbs, r.endAbs) : true;
+    return `<tr class="${s.lock ? "lock" : ""}" data-i="${r.i}" ${S.readonly || s.lock ? "" : 'draggable="true"'}>
+      <td class="grip">${S.readonly ? "" : `<span title="${s.lock ? "gesperrt" : "ziehen zum Tauschen"}">${s.lock ? "🔒" : "⠿"}</span>`}</td><td>${r.i + 1}</td>
+      <td><span class="dot" style="background:${d ? d.color : "#555"}"></span> ${esc(d ? d.name : "?")} ${dbl ? `<span class="dbl">Doppelstint ${dbl}</span>` : ""}${av ? "" : ` <span class="na" title="Laut Verfügbarkeit nicht da">nicht verfügbar</span>`}</td>
+      <td><div class="mono">${clock(r.startAbs)} – ${clock(r.endAbs)}</div>${r.stop ? `<div class="stp">Stopp ${ms(r.stop)} · weiter um ${clock(r.resume)}</div>` : ""}</td>
+      <td class="r">${r.laps}</td><td class="r mono">${lapFmt(r.lap)}</td><td class="r mono">${dur(r.st)}</td>
+      <td>${r.after ? `<span class="chip ${r.after === "Wechsel" ? "w" : "t"}">${r.after}</span>` : "<i>Ziel</i>"}</td>
+      <td class="r">${ed("stints." + r.i + ".inc", s.inc || 0, "n")}</td></tr>`;
+  }
+
+  function bar(p) {
+    if (S.readonly) return `<div class="st-bar"><b>${esc(p ? (p.event.team || "Stint-Plan") + (p.event.name ? " · " + p.event.name : "") : "Stint-Plan")}</b><span class="sp"></span><span class="note">Nur Ansicht · aktualisiert sich selbst</span></div>`;
+    return `<div class="st-bar"><select id="stSel">${S.plans.map(x => `<option value="${x.id}" ${x.id === S.cur ? "selected" : ""}>${esc(x.event.team || "Plan")}${x.event.name ? " · " + esc(x.event.name) : ""}${x.online ? "  (online)" : ""}</option>`).join("") || "<option>–</option>"}</select>
+      <button data-a="new">Neuer Plan</button><span class="sp"></span>
+      ${p ? `<button data-a="undo" ${S.undo.length ? "" : "disabled"}>Rückgängig</button><button data-a="recalc">Neu berechnen</button><button data-a="import">Garage-61-Export laden</button><button data-a="share">${p.online ? "Teilen" : "Online teilen"}</button><button data-a="del" class="ghost">Löschen</button>` : ""}
+      <button data-a="open" class="ghost">Plan per Code öffnen</button></div>
+      ${S.shareOpen && p ? shareBox(p) : ""}`;
+  }
+  function shareBox(p) {
+    const link = (S.base || "") + (S.base ? (S.base.includes("?") ? "&" : "?") : "?") + "p=" + p.view_token;
+    return `<div class="st-card wide share"><h3>Teilen</h3>${p.online ? `
+      <div class="kv"><span>Link zum Ansehen</span><span class="mono sel">${esc(link)}</span> <button data-a="copylink">kopieren</button></div>
+      <div class="kv"><span>Code zum Ansehen</span><span class="mono sel">${esc(p.view_token)}</span></div>
+      ${p.edit_token ? `<div class="kv"><span>Bearbeiten-Code (nur für Team)</span><span class="mono sel">${esc(p.edit_token)}</span> <button data-a="copyedit">kopieren</button></div>` : ""}
+      <div class="kv"><span>Adresse der Ansichtsseite</span>${ed("__base", S.base || "https://…/stint.html", "s")}</div>
+      <div class="note">Jeder mit dem Link sieht den Plan ohne Anmeldung. Bearbeiten geht nur mit dem Bearbeiten-Code (in der Garage „Plan per Code öffnen“).</div>` : `<div class="note">Der Plan liegt nur auf diesem PC.</div><button data-a="goonline">Online stellen</button>`}
+      <button data-a="closeshare" class="ghost">Schließen</button></div>`;
+  }
+
+  /* Ereignisse */
+  function wire() {
+    root.querySelectorAll(".ed").forEach(el => {
+      el.onkeydown = ev => { if (ev.key === "Enter") { ev.preventDefault(); el.blur(); } if (ev.key === "Escape") { el.textContent = el.dataset.old; el.blur(); } };
+      el.onfocus = () => { el.dataset.old = el.textContent; const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+      el.onblur = () => commit(el);
+    });
+    const sel = $("#stSel", root); if (sel) sel.onchange = () => { S.cur = sel.value; S.undo = []; draw(); };
+    root.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => set("event.mode", b.dataset.mode));
+    root.querySelectorAll("[data-tires]").forEach(b => b.onclick = () => set("fuel.tires", +b.dataset.tires));
+    root.querySelectorAll("[data-tog]").forEach(b => b.onclick = () => set("fuel.together", b.dataset.tog === "1"));
+    root.querySelectorAll("[data-col]").forEach(b => b.onchange = () => set("drivers." + b.dataset.col + ".color", b.value));
+    root.querySelectorAll("[data-deld]").forEach(b => b.onclick = () => delDriver(+b.dataset.deld));
+    root.querySelectorAll("[data-addd]").forEach(b => b.onclick = addDriver);
+    root.querySelectorAll("[data-a]").forEach(b => b.onclick = () => action(b.dataset.a));
+    root.querySelectorAll(".grip span").forEach(g => { const tr = g.closest("tr"); if (S.readonly) return; g.onclick = () => lockToggle(+tr.dataset.i); });
+    root.querySelectorAll("tbody tr[draggable]").forEach(tr => {
+      tr.ondragstart = ev => { S.dragI = +tr.dataset.i; ev.dataTransfer.effectAllowed = "move"; tr.classList.add("drag"); };
+      tr.ondragend = () => tr.classList.remove("drag");
+      tr.ondragover = ev => { ev.preventDefault(); tr.classList.add("over"); };
+      tr.ondragleave = () => tr.classList.remove("over");
+      tr.ondrop = ev => { ev.preventDefault(); tr.classList.remove("over"); swap(S.dragI, +tr.dataset.i); };
+    });
+  }
+  function commit(el) {
+    const path = el.dataset.p, t = el.dataset.t; let v = el.textContent.trim();
+    if (v === "–") v = "";
+    if (path === "__base") { S.base = v.startsWith("http") ? v : ""; io.config && io.config({ base: S.base, who: S.who }); draw(); return; }
+    if (v === el.dataset.old) { draw(); return; }
+    let val = v;
+    if (t === "n") val = parseNum(v); else if (t === "d") val = parseDur(v); else if (t === "l") val = parseDur(v);
+    const m = path.match(/^drivers\.(\d+)\.lap$/);
+    if (m) { const p = plan(); snap(); const d = p.drivers[+m[1]]; d.lap = val; d.lap_g61 = 0; ensure(p); touch(p); draw(); return; }
+    if (path === "fuel.lap" || path === "fuel.cons") { const p = plan(); if (path === "fuel.cons") { snap(); p.fuel.cons = val; p.fuel.cons_g61 = 0; ensure(p); touch(p); draw(); return; } }
+    set(path, val);
+  }
+
+  function addDriver() { const p = plan(); snap(); p.drivers.push({ name: "Fahrer " + (p.drivers.length + 1), color: PAL[p.drivers.length % PAL.length], ir: 0, avail: "", lap: 0, lap_g61: 0 }); p.stints = autoPlan(p); touch(p); draw(); }
+  function delDriver(i) {
+    const p = plan(); if (!confirm(`„${p.drivers[i].name}“ entfernen? Der Plan wird neu berechnet.`)) return; snap();
+    p.drivers.splice(i, 1); p.stints = autoPlan({ ...p, stints: [] }); touch(p); draw();
+  }
+  function lockToggle(i) { const p = plan(); snap(); p.stints[i].lock = !p.stints[i].lock; touch(p); draw(); }
+  function swap(a, b) {
+    const p = plan(); if (a < 0 || a === b || !p.stints[a] || !p.stints[b] || p.stints[b].lock) return;
+    const rows = calc(p), A = p.stints[a].d, B = p.stints[b].d; if (A === B) return;
+    const na = p.drivers[B], nb = p.drivers[A], ra = rows[a], rb = rows[b], why = [];
+    if (!availSpan(na, ra.startAbs, ra.endAbs)) why.push(`${na.name} ist bei Stint ${a + 1} (${hms(ra.startAbs)}) laut Verfügbarkeit nicht da`);
+    if (!availSpan(nb, rb.startAbs, rb.endAbs)) why.push(`${nb.name} ist bei Stint ${b + 1} (${hms(rb.startAbs)}) laut Verfügbarkeit nicht da`);
+    const q = `Stint ${a + 1} (${p.drivers[A].name}) und Stint ${b + 1} (${p.drivers[B].name}) tauschen?` + (why.length ? "\n\nAchtung: " + why.join("; ") + "." : "");
+    if (!confirm(q)) return; snap(); p.stints[a].d = B; p.stints[b].d = A; touch(p); draw();
+  }
+  async function action(a) {
+    const p = plan();
+    if (a === "new") { p0(); return; }
+    if (a === "undo") { const j = S.undo.pop(); if (j) { const o = JSON.parse(j); const i = S.plans.findIndex(x => x.id === o.id); S.plans[i] = o; touch(o); draw(); } return; }
+    if (a === "recalc") { if (!confirm("Alle nicht gesperrten Stints neu berechnen?")) return; snap(); p.stints = autoPlan(p); touch(p); draw(); return; }
+    if (a === "del") { if (!confirm("Diesen Plan löschen?" + (p.online ? " (Der Online-Plan bleibt auf dem Server bestehen.)" : ""))) return; await io.del(p.id); S.plans = S.plans.filter(x => x.id !== p.id); S.cur = S.plans[0] ? S.plans[0].id : null; draw(); return; }
+    if (a === "import") { const f = document.createElement("input"); f.type = "file"; f.accept = ".xlsx"; f.onchange = () => importFile(f.files[0]); f.click(); return; }
+    if (a === "share") { S.shareOpen = true; draw(); return; }
+    if (a === "closeshare") { S.shareOpen = false; draw(); return; }
+    if (a === "goonline") { await goOnline(p); return; }
+    if (a === "copylink") { navigator.clipboard.writeText((S.base || "") + (S.base && S.base.includes("?") ? "&" : "?") + "p=" + p.view_token); toast("Link kopiert."); return; }
+    if (a === "copyedit") { navigator.clipboard.writeText(p.edit_token); toast("Bearbeiten-Code kopiert."); return; }
+    if (a === "open") { await openByCode(); return; }
+  }
+  function toast(m) { if (window.toast) window.toast(m); else S.msg = m; }
+  function p0() {
+    if (!S.who) { S.who = (prompt("Dein Name (für „Zuletzt geändert von“):") || "").trim(); io.config && io.config({ base: S.base, who: S.who }); }
+    const p = newPlan(S.who); p.event.team = ""; p.drivers = [
+      { name: "Fahrer 1", color: PAL[0], ir: 0, avail: "", lap: 0, lap_g61: 0 }, { name: "Fahrer 2", color: PAL[1], ir: 0, avail: "", lap: 0, lap_g61: 0 }];
+    p.fuel.lap = 0; S.plans.push(p); S.cur = p.id; S.undo = []; p.stints = autoPlan(p); touch(p); draw();
+  }
+  async function goOnline(p) {
+    const t = await io.token(); p.view_token = t.view; p.edit_token = t.edit; p.online = true; touch(p);
+    const r = await io.push(p, true); if (r.ok && r.res) p.srv = +r.res; if (!r.ok) { p.online = false; S.msg = r.error; } else S.msg = ""; await io.save(p); draw();
+  }
+  async function openByCode() {
+    let v = (prompt("Link oder Code zum Ansehen einfügen:") || "").trim(); if (!v) return;
+    const m = v.match(/[?&]p=([A-Za-z0-9]+)/); if (m) v = m[1];
+    const edit = (prompt("Bearbeiten-Code (leer lassen = nur ansehen):") || "").trim();
+    const r = await io.pull(v); if (!r.ok) { S.msg = r.error; draw(); return; }
+    const d = r.res.data; d.online = true; d.view_token = v; d.edit_token = edit; d.srv = r.res.updated_at; S.plans = S.plans.filter(x => x.id !== d.id); S.plans.push(d); S.cur = d.id; S.msg = ""; await io.save(d); draw();
+  }
+  async function importFile(f) {
+    if (!f) return; const p = plan();
+    const buf = new Uint8Array(await f.arrayBuffer()); let bin = ""; for (let i = 0; i < buf.length; i += 8192) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 8192));
+    const r = await io.import(btoa(bin)); if (!r.ok) { S.msg = r.error; draw(); return; }
+    snap(); let hit = 0, miss = [], fuels = [];
+    r.drivers.forEach(g => {
+      const n = g.name.toLowerCase(); let d = p.drivers.find(x => x.name.toLowerCase() === n) || p.drivers.find(x => x.name && (n.includes(x.name.toLowerCase()) || x.name.toLowerCase().includes(n)));
+      if (!d) { miss.push(g.name); return; } hit++; if (g.median > 0) d.lap_g61 = g.median; d.laps_g61 = g.laps; if (g.fuelLap > 0) fuels.push(g.fuelLap);
+    });
+    if (fuels.length) p.fuel.cons_g61 = fuels.reduce((a, b) => a + b, 0) / fuels.length;
+    ensure(p); p.g61_stand = r.stand; if (r.car && !p.event.car) p.event.car = r.car; touch(p);
+    S.msg = hit ? "" : "Kein Fahrername aus der Datei passt zu den Fahrern im Plan."; if (miss.length && hit) S.msg = "Nicht zugeordnet: " + miss.join(", ");
+    draw();
+  }
+
+  /* Start + Abgleich */
+  async function init() {
+    const st = await io.list(); S.plans = st.plans || []; S.base = st.base || ""; S.who = st.who || "";
+    S.cur = S.plans[0] ? S.plans[0].id : null; S.plans.forEach(ensure); draw();
+    if (!S.readonly) setInterval(syncAll, 20000);
+    return S;
+  }
+  async function syncAll() {
+    if (document.hidden || Date.now() - S.lastEdit < 6000) return;
+    for (const p of S.plans.filter(x => x.online && x.view_token)) {
+      try {
+        const r = await io.pull(p.view_token); if (!r.ok) continue;
+        if (r.res.updated_at > (p.srv || 0) && Date.now() - S.lastEdit > 6000) {
+          const d = r.res.data; d.online = true; d.view_token = p.view_token; d.edit_token = p.edit_token; d.rev = r.res.updated_at; d.srv = r.res.updated_at;
+          const i = S.plans.indexOf(p); S.plans[i] = d; await io.save(d);
+        }
+      } catch (e) {}
+    }
+    draw();
+  }
+  S.init = init; S.draw = draw; S.setPlan = (p) => { const i = S.plans.findIndex(x => x.id === p.id); if (i < 0) S.plans.push(p); else S.plans[i] = p; S.cur = p.id; ensure(p); draw(); };
+  return S;
+}
+window.StintPlaner = { create, newPlan, calc, autoPlan, parseAvail, availAt, availSpan, eff, pitTimes, parseHM, parseDur };
+})();
+
+const K="sb_publishable_INdby8QPAKIwS8qFWagfkQ_X-xKiv4K",U="https://waljltgwazekpjuxhbqq.supabase.co";
+const tok=new URLSearchParams(location.search).get("p")||"";
+async function get(){const r=await fetch(U+"/rest/v1/rpc/stint_get",{method:"POST",headers:{apikey:K,Authorization:"Bearer "+K,"Content-Type":"application/json"},body:JSON.stringify({p_view:tok})});if(!r.ok)throw 0;return r.json();}
+const app=StintPlaner.create(document.getElementById("r"),{readonly:true,list:async()=>({plans:[]})});
+let last=0;
+async function tick(){try{const x=await get();if(!x){document.getElementById("r").innerHTML='<div class="st-empty">Plan nicht gefunden.</div>';return;}
+ if(x.updated_at!==last){last=x.updated_at;const d=x.data;d.updated_by=x.updated_by;d.updated_at=x.updated_at;app.setPlan(d);}}catch(e){}}
+app.init().then(()=>{tick();setInterval(tick,15000);});
+</script></body></html>
